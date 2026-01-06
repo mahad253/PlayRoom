@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: rapidfort/microsoft-sql-server-2019-ib
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=SecureG@ming#2024
+    ports:
+      - "1434:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+      
+volumes:
+  sql_data:
