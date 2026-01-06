@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Accueil";
+}
+
+<!-- HERO -->
+<section class="hero-modern">
+    <div class="container text-center">
+        <h1 class="hero-title">PlayRoom</h1>
+        <p class="hero-subtitle">
+            Plateforme de jeux multijoueurs en temps réel.<br />
+            Jouez. Créez. Affrontez vos amis.
+        </p>
+        <div class="hero-actions">
+            <a href="#games" class="btn btn-primary btn-lg">Voir les jeux</a>
+            <a href="#" class="btn btn-outline-primary btn-lg">Créer un lobby</a>
+        </div>
+    </div>
+</section>
+
+<!-- JEUX -->
+<section id="games" class="container py-5">
+    <h2 class="section-title text-center mb-5">Jeux disponibles</h2>
+
+    <div class="row g-4">
+        <!-- Speed Typing -->
+        <div class="col-md-4">
+            <div class="game-card">
+                <img src="~/img/games/speed-typing.jpg" alt="Speed Typing">
+
+                <div class="game-card-body">
+                    <h5>Speed Typing</h5>
+                    <p>
+                        Défiez vos amis dans une course de frappe rapide synchronisée en direct.
+                    </p>
+                    <a href="#" class="btn btn-dark w-100">Jouer</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Morpion -->
+        <div class="col-md-4">
+            <div class="game-card featured">
+                <img src="~/img/games/morpion.jpg" alt="Morpion">
+
+                <div class="game-card-body">
+                    <h5>Morpion</h5>
+                    <p>
+                        Le jeu de stratégie classique à deux joueurs, en temps réel.
+                    </p>
+                    <a href="#" class="btn btn-dark w-100">Jouer</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Puissance 4 -->
+        <div class="col-md-4">
+            <div class="game-card">
+                <img src="~/img/games/puissance4.jpg" alt="Puissance 4">
+
+                <div class="game-card-body">
+                    <h5>Puissance 4</h5>
+                    <p>
+                        Alignez quatre jetons avant votre adversaire dans ce duel stratégique.
+                    </p>
+                    <a href="#" class="btn btn-dark w-100">Jouer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FONCTIONNEMENT -->
+<section class="container py-5">
+    <h2 class="section-title text-center mb-4">Fonctionnement</h2>
+
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="step">1</div>
+            <h6>Choisir un jeu</h6>
+            <p>Sélectionnez un jeu multijoueur disponible.</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="step">2</div>
+            <h6>Créer ou rejoindre un lobby</h6>
+            <p>Public ou privé, invitez vos amis.</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="step">3</div>
+            <h6>Jouer en direct</h6>
+            <p>Synchronisation instantanée via SignalR.</p>
+        </div>
+    </div>
+</section>
