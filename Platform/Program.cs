@@ -1,5 +1,6 @@
 using GamingPlatform.Data;
 using GamingPlatform.Hubs;
+using GamingPlatform.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,9 @@ builder.Services.AddControllersWithViews();
 // SignalR
 builder.Services.AddSignalR();
 
+// Store des jeux (Puissance 4, etc.)
+builder.Services.AddSingleton<IGameStore, InMemoryGameStore>();
+
 var app = builder.Build();
 
 // =======================
@@ -36,7 +40,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Si vous ne gérez pas HTTPS en local, vous pouvez commenter cette ligne
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -56,10 +62,13 @@ app.MapControllerRoute(
 // SIGNALR HUBS
 // =======================
 
-// Chat global (si tu le gardes)
+// Chat global
 app.MapHub<ChatHub>("/chatHub");
 
-// Morpion (IMPORTANT)
+// Puissance 4
+app.MapHub<Connect4Hub>("/connect4Hub");
+
+// Morpion
 app.MapHub<MorpionHub>("/morpionHub");
 
 // =======================
