@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/mahad/Bureau/PlayRoom/Platform/GamingPlatform.csproj": {}
+    "/home/hatho/PlayRoom/Platform/GamingPlatform.csproj": {}
   },
   "projects": {
-    "/home/mahad/Bureau/PlayRoom/Platform/GamingPlatform.csproj": {
+    "/home/hatho/PlayRoom/Platform/GamingPlatform.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/mahad/Bureau/PlayRoom/Platform/GamingPlatform.csproj",
+        "projectUniqueName": "/home/hatho/PlayRoom/Platform/GamingPlatform.csproj",
         "projectName": "GamingPlatform",
-        "projectPath": "/home/mahad/Bureau/PlayRoom/Platform/GamingPlatform.csproj",
-        "packagesPath": "/home/mahad/.nuget/packages/",
-        "outputPath": "/home/mahad/Bureau/PlayRoom/Platform/obj/",
+        "projectPath": "/home/hatho/PlayRoom/Platform/GamingPlatform.csproj",
+        "packagesPath": "/home/hatho/.nuget/packages/",
+        "outputPath": "/home/hatho/PlayRoom/Platform/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/mahad/.nuget/NuGet/NuGet.Config"
+          "/home/hatho/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/mahad/.dotnet/sdk/9.0.308/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/hatho/dotnet/sdk/9.0.308/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

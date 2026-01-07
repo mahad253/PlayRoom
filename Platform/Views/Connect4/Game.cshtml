@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Puissance 4";
+    var lobbyId = (string)ViewBag.LobbyId;
+}
+
+<link rel="stylesheet" href="~/css/connect4.css" />
+
+<div class="container py-4">
+    <h2 class="mb-3">Puissance 4</h2>
+
+    <div class="mb-2">
+        <span class="badge text-bg-secondary">Lobby</span>
+        <code id="lobbyId">@lobbyId</code>
+    </div>
+
+    <div id="status" class="alert alert-info py-2">Connexion...</div>
+
+    <div id="board" class="c4-board" aria-label="Grille puissance 4"></div>
+</div>
+
+<script>
+  window.CONNECT4_LOBBY = "@lobbyId";
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script src="~/js/connect4.js"></script>
+
+

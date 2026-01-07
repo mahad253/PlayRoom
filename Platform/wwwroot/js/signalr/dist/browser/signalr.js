@@ -61,26 +61,26 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "AbortError": () => (/* reexport */ AbortError),
-  "DefaultHttpClient": () => (/* reexport */ DefaultHttpClient),
-  "HttpClient": () => (/* reexport */ HttpClient),
-  "HttpError": () => (/* reexport */ HttpError),
-  "HttpResponse": () => (/* reexport */ HttpResponse),
-  "HttpTransportType": () => (/* reexport */ HttpTransportType),
-  "HubConnection": () => (/* reexport */ HubConnection),
-  "HubConnectionBuilder": () => (/* reexport */ HubConnectionBuilder),
-  "HubConnectionState": () => (/* reexport */ HubConnectionState),
-  "JsonHubProtocol": () => (/* reexport */ JsonHubProtocol),
-  "LogLevel": () => (/* reexport */ LogLevel),
-  "MessageType": () => (/* reexport */ MessageType),
-  "NullLogger": () => (/* reexport */ NullLogger),
-  "Subject": () => (/* reexport */ Subject),
-  "TimeoutError": () => (/* reexport */ TimeoutError),
-  "TransferFormat": () => (/* reexport */ TransferFormat),
-  "VERSION": () => (/* reexport */ VERSION)
+  AbortError: () => (/* reexport */ AbortError),
+  DefaultHttpClient: () => (/* reexport */ DefaultHttpClient),
+  HttpClient: () => (/* reexport */ HttpClient),
+  HttpError: () => (/* reexport */ HttpError),
+  HttpResponse: () => (/* reexport */ HttpResponse),
+  HttpTransportType: () => (/* reexport */ HttpTransportType),
+  HubConnection: () => (/* reexport */ HubConnection),
+  HubConnectionBuilder: () => (/* reexport */ HubConnectionBuilder),
+  HubConnectionState: () => (/* reexport */ HubConnectionState),
+  JsonHubProtocol: () => (/* reexport */ JsonHubProtocol),
+  LogLevel: () => (/* reexport */ LogLevel),
+  MessageType: () => (/* reexport */ MessageType),
+  NullLogger: () => (/* reexport */ NullLogger),
+  Subject: () => (/* reexport */ Subject),
+  TimeoutError: () => (/* reexport */ TimeoutError),
+  TransferFormat: () => (/* reexport */ TransferFormat),
+  VERSION: () => (/* reexport */ VERSION)
 });
 
-;// CONCATENATED MODULE: ./src/Errors.ts
+;// ./src/Errors.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 /** Error thrown when an HTTP request fails. */
@@ -215,7 +215,7 @@ class AggregateErrors extends Error {
     }
 }
 
-;// CONCATENATED MODULE: ./src/HttpClient.ts
+;// ./src/HttpClient.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 /** Represents an HTTP response. */
@@ -263,7 +263,7 @@ class HttpClient {
     }
 }
 
-;// CONCATENATED MODULE: ./src/ILogger.ts
+;// ./src/ILogger.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // These values are designed to match the ASP.NET Log Levels since that's the pattern we're emulating here.
@@ -289,7 +289,7 @@ var LogLevel;
     LogLevel[LogLevel["None"] = 6] = "None";
 })(LogLevel || (LogLevel = {}));
 
-;// CONCATENATED MODULE: ./src/Loggers.ts
+;// ./src/Loggers.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 /** A logger that does nothing when log messages are sent to it. */
@@ -303,14 +303,18 @@ class NullLogger {
 /** The singleton instance of the {@link @microsoft/signalr.NullLogger}. */
 NullLogger.instance = new NullLogger();
 
-;// CONCATENATED MODULE: ./src/Utils.ts
+;// ./src/pkg-version.ts
+const VERSION = '10.0.0';
+
+;// ./src/Utils.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+
 // Version token that will be replaced by the prepack command
 /** The version of the SignalR client. */
-const VERSION = "8.0.7";
+
 /** @private */
 class Arg {
     static isRequired(val, name) {
@@ -377,7 +381,7 @@ function formatArrayBuffer(data) {
         str += `0x${pad}${num.toString(16)} `;
     });
     // Trim of trailing space.
-    return str.substr(0, str.length - 1);
+    return str.substring(0, str.length - 1);
 }
 // Also in signalr-protocol-msgpack/Utils.ts
 /** @private */
@@ -552,7 +556,7 @@ function getGlobalThis() {
     throw new Error("could not find global");
 }
 
-;// CONCATENATED MODULE: ./src/FetchHttpClient.ts
+;// ./src/FetchHttpClient.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -709,7 +713,7 @@ function deserializeContent(response, responseType) {
     return content;
 }
 
-;// CONCATENATED MODULE: ./src/XhrHttpClient.ts
+;// ./src/XhrHttpClient.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -793,7 +797,7 @@ class XhrHttpClient extends HttpClient {
     }
 }
 
-;// CONCATENATED MODULE: ./src/DefaultHttpClient.ts
+;// ./src/DefaultHttpClient.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -835,7 +839,7 @@ class DefaultHttpClient extends HttpClient {
     }
 }
 
-;// CONCATENATED MODULE: ./src/TextMessageFormat.ts
+;// ./src/TextMessageFormat.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // Not exported from index
@@ -856,7 +860,7 @@ class TextMessageFormat {
 TextMessageFormat.RecordSeparatorCode = 0x1e;
 TextMessageFormat.RecordSeparator = String.fromCharCode(TextMessageFormat.RecordSeparatorCode);
 
-;// CONCATENATED MODULE: ./src/HandshakeProtocol.ts
+;// ./src/HandshakeProtocol.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -908,7 +912,7 @@ class HandshakeProtocol {
     }
 }
 
-;// CONCATENATED MODULE: ./src/IHubProtocol.ts
+;// ./src/IHubProtocol.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 /** Defines the type of a Hub Message. */
@@ -932,7 +936,7 @@ var MessageType;
     MessageType[MessageType["Sequence"] = 9] = "Sequence";
 })(MessageType || (MessageType = {}));
 
-;// CONCATENATED MODULE: ./src/Subject.ts
+;// ./src/Subject.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -966,7 +970,7 @@ class Subject {
     }
 }
 
-;// CONCATENATED MODULE: ./src/MessageBuffer.ts
+;// ./src/MessageBuffer.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -1161,7 +1165,7 @@ class BufferedItem {
     }
 }
 
-;// CONCATENATED MODULE: ./src/HubConnection.ts
+;// ./src/HubConnection.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -1708,23 +1712,24 @@ class HubConnection {
         if (!this.connection.features || !this.connection.features.inherentKeepAlive) {
             // Set the timeout timer
             this._timeoutHandle = setTimeout(() => this.serverTimeout(), this.serverTimeoutInMilliseconds);
+            // Immediately fire Keep-Alive ping if nextPing is overdue to avoid dependency on JS timers
+            let nextPing = this._nextKeepAlive - new Date().getTime();
+            if (nextPing < 0) {
+                if (this._connectionState === HubConnectionState.Connected) {
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                    this._trySendPingMessage();
+                }
+                return;
+            }
             // Set keepAlive timer if there isn't one
             if (this._pingServerHandle === undefined) {
-                let nextPing = this._nextKeepAlive - new Date().getTime();
                 if (nextPing < 0) {
                     nextPing = 0;
                 }
                 // The timer needs to be set from a networking callback to avoid Chrome timer throttling from causing timers to run once a minute
                 this._pingServerHandle = setTimeout(async () => {
                     if (this._connectionState === HubConnectionState.Connected) {
-                        try {
-                            await this._sendMessage(this._cachedPingMessage);
-                        }
-                        catch {
-                            // We don't care about the error. It should be seen elsewhere in the client.
-                            // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
-                            this._cleanupPingTimer();
-                        }
+                        await this._trySendPingMessage();
                     }
                 }, nextPing);
             }
@@ -1848,7 +1853,7 @@ class HubConnection {
         const reconnectStartTime = Date.now();
         let previousReconnectAttempts = 0;
         let retryError = error !== undefined ? error : new Error("Attempting to reconnect due to a unknown error.");
-        let nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts++, 0, retryError);
+        let nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts, 0, retryError);
         if (nextRetryDelay === null) {
             this._logger.log(LogLevel.Debug, "Connection not reconnecting because the IRetryPolicy returned null on the first reconnect attempt.");
             this._completeClose(error);
@@ -1875,7 +1880,7 @@ class HubConnection {
             }
         }
         while (nextRetryDelay !== null) {
-            this._logger.log(LogLevel.Information, `Reconnect attempt number ${previousReconnectAttempts} will start in ${nextRetryDelay} ms.`);
+            this._logger.log(LogLevel.Information, `Reconnect attempt number ${previousReconnectAttempts + 1} will start in ${nextRetryDelay} ms.`);
             await new Promise((resolve) => {
                 this._reconnectDelayHandle = setTimeout(resolve, nextRetryDelay);
             });
@@ -1908,8 +1913,9 @@ class HubConnection {
                     }
                     return;
                 }
+                previousReconnectAttempts++;
                 retryError = e instanceof Error ? e : new Error(e.toString());
-                nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts++, Date.now() - reconnectStartTime, retryError);
+                nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts, Date.now() - reconnectStartTime, retryError);
             }
         }
         this._logger.log(LogLevel.Information, `Reconnect retries have been exhausted after ${Date.now() - reconnectStartTime} ms and ${previousReconnectAttempts} failed attempts. Connection disconnecting.`);
@@ -1957,16 +1963,16 @@ class HubConnection {
         if (nonblocking) {
             if (streamIds.length !== 0) {
                 return {
+                    target: methodName,
                     arguments: args,
                     streamIds,
-                    target: methodName,
                     type: MessageType.Invocation,
                 };
             }
             else {
                 return {
-                    arguments: args,
                     target: methodName,
+                    arguments: args,
                     type: MessageType.Invocation,
                 };
             }
@@ -1976,18 +1982,18 @@ class HubConnection {
             this._invocationId++;
             if (streamIds.length !== 0) {
                 return {
+                    target: methodName,
                     arguments: args,
                     invocationId: invocationId.toString(),
                     streamIds,
-                    target: methodName,
                     type: MessageType.Invocation,
                 };
             }
             else {
                 return {
+                    target: methodName,
                     arguments: args,
                     invocationId: invocationId.toString(),
-                    target: methodName,
                     type: MessageType.Invocation,
                 };
             }
@@ -2053,18 +2059,18 @@ class HubConnection {
         this._invocationId++;
         if (streamIds.length !== 0) {
             return {
+                target: methodName,
                 arguments: args,
                 invocationId: invocationId.toString(),
                 streamIds,
-                target: methodName,
                 type: MessageType.StreamInvocation,
             };
         }
         else {
             return {
+                target: methodName,
                 arguments: args,
                 invocationId: invocationId.toString(),
-                target: methodName,
                 type: MessageType.StreamInvocation,
             };
         }
@@ -2099,9 +2105,19 @@ class HubConnection {
     _createCloseMessage() {
         return { type: MessageType.Close };
     }
+    async _trySendPingMessage() {
+        try {
+            await this._sendMessage(this._cachedPingMessage);
+        }
+        catch {
+            // We don't care about the error. It should be seen elsewhere in the client.
+            // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
+            this._cleanupPingTimer();
+        }
+    }
 }
 
-;// CONCATENATED MODULE: ./src/DefaultReconnectPolicy.ts
+;// ./src/DefaultReconnectPolicy.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // 0, 2, 10, 30 second delays before reconnect attempts.
@@ -2116,7 +2132,7 @@ class DefaultReconnectPolicy {
     }
 }
 
-;// CONCATENATED MODULE: ./src/HeaderNames.ts
+;// ./src/HeaderNames.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 class HeaderNames {
@@ -2124,7 +2140,7 @@ class HeaderNames {
 HeaderNames.Authorization = "Authorization";
 HeaderNames.Cookie = "Cookie";
 
-;// CONCATENATED MODULE: ./src/AccessTokenHttpClient.ts
+;// ./src/AccessTokenHttpClient.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -2171,7 +2187,7 @@ class AccessTokenHttpClient extends HttpClient {
     }
 }
 
-;// CONCATENATED MODULE: ./src/ITransport.ts
+;// ./src/ITransport.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // This will be treated as a bit flag in the future, so we keep it using power-of-two values.
@@ -2196,7 +2212,7 @@ var TransferFormat;
     TransferFormat[TransferFormat["Binary"] = 2] = "Binary";
 })(TransferFormat || (TransferFormat = {}));
 
-;// CONCATENATED MODULE: ./src/AbortController.ts
+;// ./src/AbortController.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // Rough polyfill of https://developer.mozilla.org/en-US/docs/Web/API/AbortController
@@ -2225,7 +2241,7 @@ class AbortController_AbortController {
     }
 }
 
-;// CONCATENATED MODULE: ./src/LongPollingTransport.ts
+;// ./src/LongPollingTransport.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -2409,7 +2425,7 @@ class LongPollingTransport {
     }
 }
 
-;// CONCATENATED MODULE: ./src/ServerSentEventsTransport.ts
+;// ./src/ServerSentEventsTransport.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -2513,7 +2529,7 @@ class ServerSentEventsTransport {
     }
 }
 
-;// CONCATENATED MODULE: ./src/WebSocketTransport.ts
+;// ./src/WebSocketTransport.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -2669,7 +2685,7 @@ class WebSocketTransport {
     }
 }
 
-;// CONCATENATED MODULE: ./src/HttpConnection.ts
+;// ./src/HttpConnection.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -3240,7 +3256,7 @@ class PromiseSource {
     }
 }
 
-;// CONCATENATED MODULE: ./src/JsonHubProtocol.ts
+;// ./src/JsonHubProtocol.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -3360,7 +3376,7 @@ class JsonHubProtocol {
     }
 }
 
-;// CONCATENATED MODULE: ./src/HubConnectionBuilder.ts
+;// ./src/HubConnectionBuilder.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -3505,7 +3521,7 @@ function isLogger(logger) {
     return logger.log !== undefined;
 }
 
-;// CONCATENATED MODULE: ./src/index.ts
+;// ./src/index.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
@@ -3521,7 +3537,7 @@ function isLogger(logger) {
 
 
 
-;// CONCATENATED MODULE: ./src/browser-index.ts
+;// ./src/browser-index.ts
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // This is where we add any polyfills we'll need for the browser. It is the entry module for browser-specific builds.

@@ -2,6 +2,7 @@ using GamingPlatform.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using GamingPlatform.Data;
+using GamingPlatform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<GamingPlatformContext>(options =>
@@ -10,6 +11,9 @@ builder.Services.AddDbContext<GamingPlatformContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<IGameStore, InMemoryGameStore>();
+
 
 var app = builder.Build();
 
@@ -33,5 +37,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chatHub");
-
+app.MapHub<Connect4Hub>("/connect4Hub");
 app.Run();
