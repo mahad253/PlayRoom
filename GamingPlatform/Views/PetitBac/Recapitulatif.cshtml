@@ -1,0 +1,126 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.HideHeader = true;
+    ViewBag.HideFooter = true;
+}
+@model GamingPlatform.Models.PetitBacGame
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Récapitulatif de la Partie : Petit Bac</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="mb-4">Détails de la Partie :</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 40%;">Pseudo du Créateur</th>
+                                <td>@Model.CreatorPseudo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nombre de Joueurs</th>
+                                <td>@Model.PlayerCount</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Lettre Sélectionnée</th>
+                                <td>
+                                    @if (Model.Letters != null && Model.Letters.Any())
+                                    {
+                                        @string.Join(", ", Model.Letters)
+                                    }
+                                    else
+                                    {
+                                        <span>Aucune lettre sélectionnée</span>
+                                    }
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row">Catégories Sélectionnées</th>
+                                <td>
+                                    <ul class="list-group">
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <li class="list-group-item">@category.Name</li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                                 <tr>
+                                 <tr>
+                                <th scope="row">Lien pour Inviter les Joueurs</th>
+                                <td>
+                                    <!-- Alerte de copie personnalisée -->
+                                    <div id="copyAlert" class="alert alert-success" style="display: none;"></div>
+                                    <div class="input-group">
+                                        <input id="playerLink" type="text" class="form-control" value="@ViewBag.LinkPlayer2" readonly />
+                                        <button class="btn btn-outline-secondary" id="copyButton" type="button" style="margin-left: 20px;">
+                                            Copier
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Copiez ce lien et partagez-le avec les autres joueurs pour qu'ils rejoignent la partie.
+                                    </small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Liste des Joueurs :</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Statut</th>
+            <th>Actions</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody id="player-list">
+        <!-- Les lignes des joueurs seront insérées dynamiquement ici -->
+    </tbody>
+</table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalCorrection" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCorrectionLabel">Corriger les réponses de <span id="playerName"></span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="correctionForm">
+                    <div id="answers-container">
+                        <!-- Les réponses des joueurs seront chargées dynamiquement ici -->
+                    </div>
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelButton">Fermer</button>
+        <button type="button" class="btn btn-primary" id="submitCorrection">Soumettre</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="game-info" data-game-id="@Model.Id" data-session-token="@ViewBag.SessionToken"></div>
+
+
+<!-- Ajouter ici le script SignalR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+<script src="~/js/PetitBac/Rejoindre.js"></script>

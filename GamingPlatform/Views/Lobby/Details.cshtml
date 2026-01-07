@@ -1,0 +1,139 @@
+﻿@model GamingPlatform.Models.Lobby
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header text-center">
+            <h1>Lobby: @Model.Name</h1>
+        </div>
+        <div class="card-body">
+            <!-- Information sur le jeu -->
+            <div class="mb-3">
+                @if (Model.Game != null)
+                {
+                    <p><strong>Jeu :</strong> @Model.Game.Name</p>
+                }
+                else
+                {
+                    <p class="text-danger"><strong>Jeu :</strong> Non spécifié</p>
+                }
+                <p>
+                    <strong>Status :</strong>
+                    @if (Model.Status == GamingPlatform.Models.LobbyStatus.Waiting)
+                    {
+                        <span class="badge bg-warning">En attente</span>
+                    }
+                    else if (Model.Status == GamingPlatform.Models.LobbyStatus.InProgress)
+                    {
+                        <span class="badge bg-success">En cours</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Terminé</span>
+                    }
+                </p>
+            </div>
+
+            <!-- Liste des joueurs -->
+            <h3 class="mt-4">Joueurs</h3>
+
+
+            <ul class="list-group">
+
+                @if (Model.LobbyPlayers != null && Model.LobbyPlayers.Any())
+                {
+                    @foreach (var lobbyPlayer in Model.LobbyPlayers)
+                    {
+                        if (lobbyPlayer.Player != null)
+                        {
+                            <li class="list-group-item">
+                                <strong>@lobbyPlayer.Player.Pseudo</strong> (@lobbyPlayer.Player.Name)
+                            </li>
+                        }
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item text-danger">Aucun joueur dans ce lobby.</li>
+                }
+            </ul>
+            <!-- Si le lobby est privé, afficher le lien d'invitation -->
+
+             @if(Model.Game != null && Model.Game.Name != "PetitBac"){
+                <div class="mt-4">
+                <h4>Inviter un joueur :</h4>
+                <p>Copiez et envoyez ce lien à vos amis pour les inviter dans ce lobby :</p>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="inviteLink"
+                        value="@Url.Action(Model.IsPrivate ? "JoinPrivateLobby" : "JoinPublicLobby", "Lobby", Model.IsPrivate ? new { id = Model.Id, password = Model.Password } : new { id = Model.Id }, "http")"
+                        readonly />
+                    <button class="btn btn-outline-secondary" type="button" onclick="copyInviteLink()">Copier</button>
+                </div>
+            </div>
+             }
+
+        
+            <!-- Actions basées sur le status -->
+            <div class="mt-4 text-center">
+                @if (Model.Status == GamingPlatform.Models.LobbyStatus.Waiting)
+                {
+                     @if (Model.Game != null && Model.Game.Name == "PetitBac")
+                    {
+                        <!-- Redirection vers la configuration pour Petit Bac -->
+                            <a href="@Url.Action("Configure", "PetitBac", new { lobbyId = Model.Id })" class="btn btn-primary">Configurer le jeu</a>
+                    }else{
+                        <button class="btn btn-primary" onclick="startGame('@Model.Id')">Lancer le jeu</button>
+                    }
+                    
+                }
+                else if (Model.Status == GamingPlatform.Models.LobbyStatus.InProgress)
+                {
+                    if (@Model.Game.Code == "SPT" || @Model.Game.Code == "MOR" || @Model.Game.Code == "LAB")
+                    {
+                        <a href="/Game/@Model.Game.Code/Play/@Model.Id" class="btn btn-success">
+                            Rejoindre le plateau de jeu
+                        </a>
+                    } else if (@Model.Game.Name == "PetitBac"){
+                          <a href="@Url.Action("Configure", "PetitBac", new { lobbyId = Model.Id })" class="btn btn-primary">Configurer le jeu</a>
+                    }
+
+                    else
+                    {
+                        <a href="/Game/Play/@Model.Game.Code?lobbyId=@Model.Id" class="btn btn-success">
+                            Rejoindre le plateau de jeu
+                        </a>
+                    }
+
+                }
+                else if (Model.Status == GamingPlatform.Models.LobbyStatus.Finished)
+                {
+                    <p class="text-muted">Ce lobby est terminé. Merci d'avoir joué !</p>
+                    <a href="/Lobby/Archive/@Model.Id" class="btn btn-secondary">Archiver</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function startGame(lobbyId) {
+            console.log(`/Game/@Model.Game.Code/Play/${lobbyId}`);
+            fetch(`/Lobby/Start/${lobbyId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.href = `/Game/@Model.Game.Code/Play/${lobbyId}`;
+                })
+                .catch(err => {
+                    console.error("Une erreur s'est produite : ", err);
+                    alert("Une erreur est survenue. Veuillez réessayer.");
+                });
+        }
+        function copyInviteLink() {
+            var copyText = document.getElementById("inviteLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // Pour les appareils mobiles
+            document.execCommand("copy");
+            alert("Lien d'invitation copié !");
+        }
+    </script>
+}

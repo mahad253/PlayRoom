@@ -1,0 +1,106 @@
+﻿@{
+	Layout = null;
+}
+
+<meta charset="utf-8">
+<title>Course Labyrinthe</title>
+<link rel="stylesheet" href="~/css/labyrinth/style.css" asp-append-version="true" />
+
+<body class="d-flex flex-column vh-100 bg-light">
+    <!-- Bouton Quitter -->
+    <a href="/lobby" class="quit-button">Quitter le jeu</a>
+
+    <!-- Affichage des noms des joueurs -->
+    <div id="playerNames" style="position: absolute; top: 10px; left: 10px; z-index: 100;">
+        <p style="margin: 0; color: blue; font-weight: bold;"> X : @ViewBag.player1</p>
+        <p style="margin: 0; color: red; font-weight: bold;"> O: @ViewBag.player2</p>
+    </div>
+
+    <!-- Spinner de chargement -->
+    <div id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Chargement du labyrinthe ...</p>
+    </div>
+
+    <!-- Canvas masqué initialement -->
+    <div id="gameContainer" style="display: none;">
+        <canvas width="700" height="500" style="border: 2px solid black" oncontextmenu="return false;"></canvas>
+        <p id="gameMessages">Une seconde, les sbires travaillent dur pour construire ta perte.</p>
+    </div>
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        var labyrinth;
+        var gameReady = false;
+        const lobbyId = '@ViewBag.lobbyId';
+        // Appel pour récupérer le labyrinthe
+        fetch(`/game/lab/getlabyrinthlobby/${lobbyId}`) // Vérifiez le bon chemin de l'endpoint
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); // Convertir la réponse en JSON
+            })
+            .then(data => {
+                try {
+                    // Convertir le champ `data` en un objet JSON
+                    labyrinth = JSON.parse(data.data);
+                    gameReady = true;
+
+                    // Masquer le spinner et afficher le canvas
+                    document.getElementById("loadingSpinner").style.display = "none";
+                    document.getElementById("gameContainer").style.display = "block";
+
+                    render(); // Démarrer l'affichage du jeu
+                } catch (parseError) {
+                    console.error("Error parsing labyrinth data:", parseError);
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching labyrinth:", err.toString());
+                // Optionnel : afficher un message d'erreur ou réessayer
+            });
+        const player1 = "@ViewBag.player1";
+        const player2 = "@ViewBag.player2";
+        const currentplayer = "@ViewBag.currentplayer";
+        // Handles keyboard input
+        function keyboardHandler(event) {
+            if (!gameReady) return;
+            if (!gameRunning && (event.keyCode >= 37 && event.keyCode <= 40 || event.keyCode >= 65 && event.keyCode <= 87)) {
+                gameRunning = true;
+            }
+
+            // Handle player movement and send to server
+            if (event.keyCode >= 37 && event.keyCode <= 40) { // Arrow keys for Player 1
+                handlePlayerMovement(event.keyCode, player1Cell, UP, DOWN, LEFT, RIGHT, 1, (nextCell) => {
+                    if (player1 === currentplayer) {
+                        player1Cell = nextCell;
+                        connection.invoke("SendPlayerMovement", 1, nextCell);
+                    }
+                });
+            }
+            if (event.keyCode >= 37 && event.keyCode <= 40) { // Arrow keys for Player 2
+                handlePlayerMovement(event.keyCode, player2Cell, UP, DOWN, LEFT, RIGHT, 2, (nextCell) => {
+                    if (player2 === currentplayer) {
+                        player2Cell = nextCell;
+                        connection.invoke("SendPlayerMovement", 2, nextCell);
+                    }
+                });
+            }
+
+
+            // Check for win condition
+            if (player1Cell == destinationCell || player2Cell == destinationCell) {
+                endGame();
+                if (player1Cell == destinationCell) {
+                    connection.invoke("SendGameEnd", `${player1} a gagné la course !`);
+                } else {
+                    connection.invoke("SendGameEnd", `${player2} a gagné la course !`);
+                }
+            }
+
+            render();
+        }
+    </script>
+	<script src="~/js/labyrinth/actions.js"></script>
+</body>

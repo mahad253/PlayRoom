@@ -1,0 +1,53 @@
+﻿@model GameDetailsViewModel
+
+@{
+    ViewData["Title"] = "Lobbies pour " + Model.Game.Name;
+}
+
+<div class="game-lobbies container my-5">
+    <!-- En-tête avec le titre du jeu -->
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="display-4">@Model.Game.Name</h1>
+        </div>
+    </div>
+
+    <!-- Liste des lobbies associés à ce jeu -->
+    <div class="mt-5">
+        <h2 class="mb-4">Tous les lobbies pour ce jeu</h2>
+
+        @if (Model.Lobbies != null && Model.Lobbies.Any())
+        {
+            <div class="row">
+                @foreach (var lobby in Model.Lobbies
+               .Where(l => !l.IsPrivate || l.LobbyPlayers.Any(p => p.PlayerId == ViewBag.CurrentUserId)))
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@lobby.Name</h5>
+                                <p class="card-text">
+                                    <strong>Statut :</strong> @lobby.Status <br />
+                                    <strong>Créé le :</strong> @lobby.CreatedAt.ToString("dd/MM/yyyy HH:mm") <br />
+                                    <strong>Type :</strong> @(lobby.IsPrivate ? "Privé" : "Public")
+                                </p>
+                                @if (lobby.LobbyPlayers.Any(p => p.PlayerId == ViewBag.CurrentUserId))
+                                {
+                                    <a class="btn btn-sm btn-warning" href="/Lobby/ResumeLobby/@lobby.Id">Reprendre</a>
+                                }
+                                else if (!lobby.IsPrivate)
+                                {
+                                    <a class="btn btn-sm btn-info" href="/Lobby/JoinLobby/@lobby.Id">Rejoindre</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Aucun lobby n'a encore été créé pour ce jeu.</p>
+        }
+    </div>
+</div>

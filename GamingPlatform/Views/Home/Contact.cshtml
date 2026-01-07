@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Contact - GamingPlatform";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center bg-primary text-white">
+                    <h3><i class="fas fa-envelope"></i> Nous Contacter</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-center mb-4">Nous serions ravis d'entendre vos questions, commentaires ou suggestions. Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.</p>
+
+                    @if (ViewData["MessageSent"] != null)
+                    {
+                        <div class="alert alert-info text-center">
+                            @ViewData["MessageSent"]
+                        </div>
+                    }
+
+                    <form method="post" asp-action="SendContactForm">
+                        <div class="form-group">
+                            <label for="name">Nom</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Votre nom" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Votre email" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Objet</label>
+                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Objet de votre message" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Écrivez votre message ici..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de confirmation d'envoi -->
+<div class="modal fade" id="contactSuccessModal" tabindex="-1" role="dialog" aria-labelledby="contactSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactSuccessModalLabel">Message Envoyé</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Afficher un message de confirmation après l'envoi du formulaire
+        @if (ViewData["MessageSent"] != null)
+        {
+            <text>
+                    $('#contactSuccessModal').modal('show');
+            </text>
+        }
+    </script>
+}

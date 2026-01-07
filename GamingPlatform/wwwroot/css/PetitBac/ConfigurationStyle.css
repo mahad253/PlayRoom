@@ -1,0 +1,25 @@
+.categories-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacement entre les éléments */
+}
+.d-flex {
+    display: flex;
+    flex-wrap: wrap; /* Permet le retour à la ligne si les colonnes dépassent la largeur */
+    gap: 15px; /* Espacement entre les colonnes */
+}
+
+/* personalisation de l'affichage des messages*/
+.text-danger {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.d-none {
+    display: none;
+}
+
+
+
+

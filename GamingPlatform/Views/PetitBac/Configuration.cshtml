@@ -1,0 +1,91 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.HideHeader = true;
+    ViewBag.HideFooter = true;
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Configuration de la Partie : Petit Bac</h1>
+
+    <form method="post" asp-action="ConfigureGame" id="configureGameForm">
+        <input type="hidden" name="LobbyId" value="@Model.LobbyId" />
+
+        <!-- Pseudo du Créateur -->
+        <div class="mb-4">
+            <label for="CreatorPseudo" class="form-label">Pseudo du Créateur :</label>
+            <input type="text" class="form-control" id="CreatorPseudo" name="CreatorPseudo" value="@Model.CreatorPseudo" required />
+            <small class="text-danger d-none" id="pseudoError">Le pseudo ne peut pas être vide.</small>
+        </div>
+
+        <!-- Nombre de Joueurs -->
+        <div class="mb-4">
+            <label for="PlayerCount" class="form-label">Nombre de Joueurs :</label>
+            <input type="number" class="form-control" id="PlayerCount" name="PlayerCount" value="@Model.PlayerCount" min="2" required />
+        </div>
+
+       <!-- Sélection des Lettres -->
+    <div class="mb-4">
+    <label class="form-label">Sélectionnez les Lettres :</label>
+    <div class="d-flex flex-wrap">
+        <!-- Première ligne de lettres -->
+        <div class="w-100 d-flex justify-content-center mb-2">
+            @foreach (var letter in "ABCDEFGHIJKLM")
+            {
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="checkbox" id="letter_@letter" name="SelectedLetters" value="@letter" />
+                    <label class="form-check-label" for="letter_@letter">@letter</label>
+                </div>
+            }
+        </div>
+        <!-- Deuxième ligne de lettres -->
+        <div class="w-100 d-flex justify-content-center">
+            @foreach (var letter in "NOPQRSTUVWXYZ")
+            {
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="checkbox" id="letter_@letter" name="SelectedLetters" value="@letter" />
+                    <label class="form-check-label" for="letter_@letter">@letter</label>
+                </div>
+            }
+        </div>
+    </div>
+    <small class="text-danger d-none" id="lettersError">Vous devez sélectionner au moins une lettre.</small>
+</div>
+
+
+
+        <!-- Sélection des Catégories -->
+        <div class="mb-4">
+            <label class="form-label">Sélectionnez les Catégories :</label>
+            <div class="d-flex flex-wrap" id="categoriesContainer">
+                @{
+                    int itemsPerColumn = 5;
+                    int totalItems = Model.AvailableCategories.Count;
+                    int totalColumns = (int)Math.Ceiling((double)totalItems / itemsPerColumn);
+
+                    for (int columnIndex = 0; columnIndex < totalColumns; columnIndex++)
+                    {
+                        <div class="categories-column me-3">
+                            @for (int i = columnIndex * itemsPerColumn; i < (columnIndex + 1) * itemsPerColumn && i < totalItems; i++)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input category-checkbox" type="checkbox" id="category_@i" name="SelectedCategories" value="@Model.AvailableCategories[i]" />
+                                    <label class="form-check-label" for="category_@i">@Model.AvailableCategories[i]</label>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+                <small class="text-danger d-none" id="categoryError">Vous devez sélectionner au moins 3 catégories.</small>
+        </div>
+
+
+
+        <!-- Bouton de soumission -->
+        <div class="d-flex justify-content-center mb-5">
+            <button type="submit" class="btn btn-success btn-lg px-4" id="submitButton">Continuer</button>
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="~/css/petitBac/ConfigurationStyle.css">
+<script src="~/js/PetitBac/ConfigurationJs.js"></script>

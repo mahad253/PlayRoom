@@ -1,0 +1,107 @@
+﻿@model GamingPlatform.Models.Player
+
+
+    <div class="container">
+        <h1>Bienvenue sur la plateforme de jeux en ligne</h1>
+
+        @if (Model != null)
+        {
+            <div class="alert alert-success">
+                <h3>Vous êtes connecté en tant que : @Model.Pseudo</h3>
+                <p>Email : @Model?.email</p>
+                <p>Nom : @Model.Name</p>
+            </div>
+
+            <div>
+                <a class="btn btn-primary" href="/home/logout">Se deconecter</a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <h3>Vous n'êtes pas connecté.</h3>
+                <p>Veuillez vous connecter ou vous enregistrer.</p>
+            </div>
+            <div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registerOrLoginModal">
+                S'enregistrer
+            </button>
+            </div>
+        }
+
+
+        <!-- Votre contenu ici -->
+
+    </div>
+
+<!-- Modal d'enregistrement ou de connexion -->
+<div class="modal fade" id="registerOrLoginModal" tabindex="-1" role="dialog" aria-labelledby="registerOrLoginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerOrLoginModalLabel">S'enregistrer ou Se Connecter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulaire de connexion ou d'enregistrement -->
+                <ul class="nav nav-tabs" id="registerLoginTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="true">S'enregistrer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="false">Se connecter</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="registerLoginTabContent">
+                    <!-- Formulaire d'enregistrement -->
+                    <div class="tab-pane fade show active" id="register" role="tabpanel" aria-labelledby="register-tab">
+                        <form asp-action="RegisterPlayer" method="post">
+                            <div class="form-group">
+                                <label for="registerPseudo">Pseudo</label>
+                                <input type="text" class="form-control" id="registerPseudo" name="pseudo" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="registerName">Nom (Optionnel)</label>
+                                <input type="text" class="form-control" id="registerName" name="name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="registerEmail">Email (Optionnel)</label>
+                                <input type="email" class="form-control" id="registerEmail" name="email" />
+                            </div>
+                            <input type="hidden" class="form-control" id="returnUrl" name="returnUrl" value="@ViewBag.returnUrl" />
+                            <button type="submit" class="btn btn-primary">S'enregistrer</button>
+                        </form>
+                    </div>
+
+                    <!-- Formulaire de connexion -->
+                    <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
+                        <form asp-action="LoginPlayer" method="post">
+                            <div class="form-group">
+                                <label for="loginPseudo">Pseudo</label>
+                                <input type="text" class="form-control" id="loginPseudo" name="pseudo" required />
+                            </div>
+                            <input type="hidden" class="form-control" id="returnUrl" name="returnUrl" value="@ViewBag.returnUrl" />
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // S'assurer que le modal est bien réinitialisé à chaque fois qu'il est fermé
+        $('#registerOrLoginModal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+    </script>
+}

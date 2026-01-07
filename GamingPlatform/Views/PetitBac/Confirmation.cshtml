@@ -1,0 +1,91 @@
+@model GamingPlatform.Models.ConfirmationViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.HideHeader = true;
+    ViewBag.HideFooter = true;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-8 col-md-10 col-sm-12 text-center shadow p-5 rounded bg-light">
+            <!-- Titre principal -->
+            <h2 class="mb-4 display-4 text-primary fw-bold">
+                <span role="img" aria-label="Confetti">🎉</span>
+                Merci, @Model.PlayerPseudo !
+                <span role="img" aria-label="Confetti">🎉</span>
+            </h2>
+            
+            <!-- Message de succès -->
+            <p class="fs-5 text-success">
+                <span role="img" aria-label="Check Mark">✅</span>
+                Vos réponses ont été soumises avec succès.
+            </p>
+        @if (Model.Score > 0)
+            {
+                <p class="mt-4 fs-4 text-primary fw-bold" id="score-message">
+                    <span role="img" aria-label="Trophy">🏆</span>
+                    Votre score : @Model.Score.ToString("0.00")%
+                </p>
+            }
+        else
+            {
+                <p class="fs-5 text-warning" id="waiting-message">
+                    <span role="img" aria-label="Hourglass">⏳</span>
+                    Patientez pour voir votre score...
+                </p>
+            }
+
+          
+        </div>
+    </div>
+</div>
+
+<!-- Script SignalR pour recevoir le score en temps réel -->
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(`/petitBacHub?gameId=@Model.GameId`)
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start()
+        .then(() => {
+            console.log("Connexion SignalR établie.");
+        })
+        .catch(err => console.error("Erreur de connexion SignalR :", err));
+
+    connection.on("ReceiveScore", (playerPseudo, scorePercentage) => {
+        console.log(`SignalR - Réception score : Pseudo=${playerPseudo}, Score=${scorePercentage}`);
+
+        if (playerPseudo.trim() === "@Model.PlayerPseudo".trim()) {
+            const waitingMessage = document.getElementById("waiting-message");
+            const container = waitingMessage ? waitingMessage.parentElement : null;
+
+            if (waitingMessage && container) {
+                // Supprimer le message de patience
+                waitingMessage.remove();
+
+                // Ajouter le message du score
+                const scoreMessage = document.createElement("p");
+                scoreMessage.className = "mt-4 fs-4 text-primary fw-bold";
+                scoreMessage.id = "score-message";
+                scoreMessage.innerHTML = `
+                    <span role="img" aria-label="Trophy">🏆</span>
+                    Votre score : ${scorePercentage.toFixed(2)}%
+                `;
+                container.appendChild(scoreMessage);
+            } else {
+                console.warn("Élément #waiting-message ou son conteneur introuvable.");
+            }
+        } else {
+            console.warn("Pseudo reçu ne correspond pas : ", playerPseudo);
+        }
+    });
+});
+
+    </script>
+}

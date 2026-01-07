@@ -1,0 +1,43 @@
+﻿@model GamingPlatform.Models.Game
+
+@{
+    ViewData["Title"] = $"Créer un Lobby pour le jeu : {Model.Name}";
+}
+
+<div class="container mt-5">
+<h1>Créer un Lobby pour @Model.Name</h1>
+
+<form asp-action="CreateFromGame" method="post">
+    <!-- Le code du jeu est passé dans un champ caché -->
+    <input type="hidden" name="gameId" value="@Model.Id" />
+
+    <div class="form-group">
+        <label for="name">Nom du Lobby</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Nom du Lobby" required value="@ViewBag.GameName" />
+    </div>
+
+    <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="isPrivate" id="isPrivate" value="true" @(ViewBag.IsPrivate ? "checked" : "") />
+        <label class="form-check-label" for="isPrivate">Privé ?</label>
+    </div>
+
+    <div id="passwordField" class="form-group d-none">
+        <label for="password">Mot de passe (si privé)</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe" value="@ViewBag.Password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Créer</button>
+</form>
+</div>
+
+<!-- Script pour afficher/masquer le champ mot de passe selon la sélection privée -->
+<script>
+    document.getElementById('isPrivate').addEventListener('change', function () {
+        const passwordField = document.getElementById('passwordField');
+        if (this.checked) {
+            passwordField.classList.remove('d-none');
+        } else {
+            passwordField.classList.add('d-none');
+        }
+    });
+</script>

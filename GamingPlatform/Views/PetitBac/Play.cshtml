@@ -1,0 +1,102 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.HideHeader = true;
+    ViewBag.HideFooter = true;
+}
+@model PlayViewModel
+
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Petit Bac : Partie en cours</h1>
+
+    <form method="post" asp-action="SubmitAnswers" class="mb-5" id="gameForm">
+        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="playerId" value="@Model.PlayerId" />
+
+        @foreach (var letter in Model.Letters)
+        {
+            <div class="mb-4">
+                <h3 class="text-primary">Lettre : @letter</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <th class="text-center">@category</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <td class="text-center">
+                                        <div class="error-message text-danger mb-1"></div>
+                                        <input type="text" 
+                                               name="answers[@letter][@category]" 
+                                               class="form-control" 
+                                               placeholder="Votre réponse" 
+                                               data-letter="@letter" 
+                                               data-category="@category" />
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg px-5">Soumettre mes réponses</button>
+        </div>
+    </form>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector('#gameForm');
+
+  form.addEventListener('submit', function(event) {
+    let isValid = true;
+    // Sélectionne tous les champs de réponse
+    const inputs = form.querySelectorAll('input[name^="answers["]');
+
+    // Parcourt chaque input pour valider
+    inputs.forEach(function(input) {
+      const letter = input.dataset.letter;  // Lettre attendue
+      const category = input.dataset.category; 
+      const value = input.value.trim();
+
+      // Récupère le conteneur de message d'erreur associé
+      const errorMessageDiv = input.previousElementSibling;
+
+      // Efface les messages d'erreur précédents
+      errorMessageDiv.textContent = '';
+
+      // Expression régulière : Doit commencer par la lettre demandée et ne comporter que des lettres
+      const regex = new RegExp('^' + letter + '[A-Za-z]*$', 'i');
+
+      if (!regex.test(value)) {
+        isValid = false;
+        // Définit le message d'erreur
+        errorMessageDiv.textContent = `La réponse pour la catégorie "${category}" doit commencer par la lettre "${letter}" et ne contenir que des lettres.`;
+
+        // Optionnel : Ajouter une classe pour styliser l'input en cas d'erreur
+        input.classList.add('is-invalid');
+      } else {
+        // Si valide, retire la classe d'erreur si elle existe
+        input.classList.remove('is-invalid');
+      }
+    });
+
+    if (!isValid) {
+      event.preventDefault(); // Empêche l'envoi du formulaire si un champ est invalide
+      // Optionnel : Faire défiler la page vers le premier message d'erreur
+      const firstError = form.querySelector('.error-message:not(:empty)');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+});
+</script>

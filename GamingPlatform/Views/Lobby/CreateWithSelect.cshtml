@@ -1,0 +1,43 @@
+﻿<div class="container mt-5">
+    <h1>Créer un Nouveau Lobby</h1>
+    <form id="createLobbyForm" asp-action="CreateWithSelect" method="post">
+        <div class="form-group">
+            <label for="lobbyName">Nom du lobby</label>
+            <input type="text" class="form-control" id="lobbyName" name="Name" placeholder="Nom du lobby" value="@ViewBag.GameName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="game">Choisir un jeu</label>
+            <select name="GameId" class="form-control" id="game" required>
+                <option value="" disabled selected>Sélectionnez un jeu</option>
+                @foreach (var game in ViewBag.Games)
+                {
+                    <option value="@game.Id">@game.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="privateLobby" name="IsPrivate"
+                   value="true" @(ViewBag.IsPrivate ? "checked" : "")>
+            <label class="form-check-label" for="privateLobby">Créer un lobby privé</label>
+        </div>
+
+        <div id="passwordField" class="form-group d-none mt-3">
+            <label for="lobbyPassword">Mot de passe</label>
+            <input type="password" class="form-control" id="lobbyPassword" name="Password" placeholder="Mot de passe" value="@ViewBag.Password">
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Créer</button>
+    </form>
+</div>
+<script>
+    document.getElementById('privateLobby').addEventListener('change', function () {
+        const passwordField = document.getElementById('passwordField');
+        if (this.checked) {
+            passwordField.classList.remove('d-none');
+        } else {
+            passwordField.classList.add('d-none');
+        }
+    });
+</script>

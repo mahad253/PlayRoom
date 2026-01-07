@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Morpion</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.14/signalr.min.js"></script>
+    <style>
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-size: 24px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .cell.taken {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Morpion</h1>
+    <h2>Lobby ID : @ViewBag.LobbyId</h2>
+    <h3 id="currentPlayer">Joueur actuel : X</h3>
+    <div id="board"></div>
+    <p id="gameStatus"></p>
+
+    <script>
+        const lobbyId = '@ViewBag.LobbyId';
+        const playerName = prompt("Entrez votre nom :");
+
+        // Connexion à SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/morpionHub")
+            .build();
+
+        // Rejoindre le lobby
+        connection.start().then(() => {
+            connection.invoke("JoinGame", lobbyId, playerName);
+        });
+
+        // Écouter les événements du serveur
+        connection.on("PlayerJoined", (playerName) => {
+            console.log(`${playerName} a rejoint le jeu !`);
+        });
+
+        connection.on("UpdateGame", (board, currentPlayer) => {
+            $("#board").html(board);
+            $("#currentPlayer").text("Joueur actuel : " + currentPlayer);
+        });
+
+        connection.on("GameOver", (message) => {
+            $("#gameStatus").text(message);
+            alert(message);
+        });
+
+        connection.on("Error", (message) => {
+            alert("Erreur : " + message);
+        });
+
+        // Initialiser le plateau
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cell = $("<div>")
+                    .addClass("cell")
+                    .attr("data-x", i)
+                    .attr("data-y", j)
+                    .appendTo("#board");
+
+                cell.click(function () {
+                    const x = $(this).data("x");
+                    const y = $(this).data("y");
+                    connection.invoke("MakeMove", lobbyId, x, y, "X"); // Remplace "X" par le symbole du joueur actuel
+                });
+            }
+        }
+    </script>
+</body>
+</html>

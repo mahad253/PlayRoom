@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Erreur";
+    Layout = null;
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/error.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="error-container">
+        <!-- Icône d'erreur -->
+        <div class="error-icon">❌</div>
+
+        <h1>Oups !</h1>
+        <p>Une erreur est survenue. Nous nous excusons pour le désagrément. Veuillez réessayer plus tard.</p>
+
+        <!-- Bouton de retour -->
+        <a href="/Lobby" class="btn">Retour aux lobbies</a>
+    </div>
+</body>

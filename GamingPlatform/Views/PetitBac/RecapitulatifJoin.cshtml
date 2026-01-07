@@ -1,0 +1,97 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.HideHeader = true;
+    ViewBag.HideFooter = true;
+}
+@model GamingPlatform.Models.PetitBacGame
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Carte de récapitulatif -->
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Récapitulatif de la Partie : Petit Bac</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="mb-4">Détails de la Partie :</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 40%;">Pseudo du Créateur</th>
+                                <td>@Model.CreatorPseudo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nombre de Joueurs</th>
+                                <td>@Model.PlayerCount</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Lettre Sélectionnée</th>
+                                <td>
+                                    @if (Model.Letters != null && Model.Letters.Any())
+                                    {
+                                        @string.Join(", ", Model.Letters)
+                                    }
+                                    else
+                                    {
+                                        <span>Aucune lettre sélectionnée</span>
+                                    }
+                                </td>
+                            </tr>
+                    
+                            <tr>
+                                <th scope="row">Catégories Sélectionnées</th>
+                                <td>
+                                    <ul class="list-group">
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <li class="list-group-item">@category.Name</li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                            <form id="joinForm" method="post" asp-action="RegisterPlayer">
+                                <input type="hidden" name="gameId" value="@Model.Id" />
+                                <div id="alertMessage" class="alert alert-danger" style="display: none;"></div>
+                                <div class="mb-4">
+                                    <label for="Pseudo" class="form-label">Entrez votre Pseudo</label>
+                                    <input type="text" class="form-control" id="Pseudo" name="pseudo" required />
+                                    <small class="text-danger d-none" id="pseudoError" style="font-size: 14px; font-weight: bold;">
+                                        Le pseudo doit contenir au moins 5 caractères et commencer par une lettre.
+                                    </small>
+                                </div>
+                            </form>
+                        </tbody>
+                          
+                    </table>
+                     <h4>Liste des Joueurs :</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Pseudo</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="player-list">
+                            @foreach (var player in ViewBag.Players)
+                            {
+                                <tr>
+                                    <td>@player.Pseudo</td>
+                                    <td>@player.Status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="button" id="joinButton" class="btn btn-success btn-lg px-4">Rejoindre la partie</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="game-info" data-game-id="@Model.Id" data-session-token="@ViewBag.SessionToken"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+<script src="~/js/PetitBac/RejoindreJoueur.js"></script>
