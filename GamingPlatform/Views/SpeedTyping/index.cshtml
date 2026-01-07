@@ -1,0 +1,37 @@
+@model TypingGameViewModel
+
+@{
+ViewData["Title"] = "Speed Typing";
+}
+
+<div class="card" style="width: 22rem;">
+    <div class="card-body">
+        <h5 class="card-title">Paramètres du Jeu</h5>
+
+        <div class="form-group mb-3">
+            <label>Mode</label>
+            <select class="form-control">
+                <option>@Model.Difficulty</option>
+                <option>Moyen</option>
+                <option>Difficile</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary w-100 mb-3">Lancer la Partie</button>
+
+        <h6>Progression</h6>
+        <h3 id="spanScore">@Model.Progress</h3>
+
+        <div class="form-group mb-3">
+            <textarea class="form-control" rows="4" readonly>@Model.TextToType</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <textarea class="form-control" rows="3" id="txtInput"></textarea>
+        </div>
+
+        <div class="progress">
+            <div id="gameProgress" class="progress-bar bg-danger" style="width:@Model.Progress%"></div>
+        </div>
+    </div>
+</div>
