@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// using Microsoft.AspNetCore.Mvc;
 
-namespace GamingPlatform.Controllers
-{
-    public class signalR : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
-    }
-}
+// namespace GamingPlatform.Controllers
+// {
+   // public class signalR : Controller
+   // {
+     //   public IActionResult Index()
+       // {
+         //   return View();
+       // }
+   // }
+// }

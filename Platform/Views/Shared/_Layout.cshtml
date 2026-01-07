@@ -18,6 +18,13 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool isHomePage = controller == "Home" && action == "Index";
+}
+
 <body>
 
     <!-- NAVBAR -->
@@ -39,18 +46,24 @@
                         </a>
                     </li>
 
-                    <li class="nav-item ml-3">
-                        <a href="#games" class="btn btn-nav-play">
-                            Jouer maintenant
-                        </a>
-                    </li>
+                    @* 👇 BOUTON VISIBLE UNIQUEMENT SUR L’ACCUEIL *@
+                    @if (isHomePage)
+                    {
+                        <li class="nav-item ml-3">
+                            <a href="#games" class="btn btn-nav-play">
+                                Jouer maintenant
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- CONTENU -->
-    @RenderBody()
+    <main class="main-content">
+        @RenderBody()
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer-modern">
