@@ -1,37 +1,198 @@
-@model TypingGameViewModel
-
 @{
-ViewData["Title"] = "Speed Typing";
+    ViewData["Title"] = "SpeedTyping";
 }
 
-<div class="card" style="width: 22rem;">
-    <div class="card-body">
-        <h5 class="card-title">Paramètres du Jeu</h5>
+<div class="main-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">⚡ SPEEDTYPING ⚡</div>
+        <p class="subtitle">Maîtrisez votre clavier • Battez les records</p>
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Mode</label>
-            <select class="form-control">
-                <option>@Model.Difficulty</option>
-                <option>Moyen</option>
-                <option>Difficile</option>
-            </select>
+    <!-- Main Grid -->
+    <div class="main-grid">
+        <!-- Game Section -->
+        <div class="game-zone">
+            <!-- Game Info -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-icon">🎮</span>
+                    Paramètres du Jeu
+                </div>
+                <div class="difficulty-select">
+                    <button class="diff-btn active" data-diff="easy">Facile</button>
+                    <button class="diff-btn" data-diff="medium">Moyen</button>
+                    <button class="diff-btn" data-diff="hard">Difficile</button>
+                </div>
+                <div class="game-info">
+                    <div class="info-item">
+                        <div class="info-label">Lobby</div>
+                        <div class="info-value">DemoLobby</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Joueurs</div>
+                        <div class="info-value" id="playerCount">3</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Area -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-icon">⏱️</span>
+                    Test de Vitesse
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-display" id="timer">60</div>
+
+                <!-- Progress Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Vitesse</div>
+                        <div class="stat-value" id="wpm">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Précision</div>
+                        <div class="stat-value" id="accuracy">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value" id="score">0</div>
+                    </div>
+                </div>
+
+                <!-- Text to Type -->
+                <div class="text-display" id="textToType">
+                    <span class="char upcoming">Cliquez sur "Lancer la Partie" pour commencer...</span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Progression</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Hidden Input -->
+                <textarea id="userInput" rows="4"></textarea>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-primary" id="btnStart">🚀 Lancer</button>
+                    <button class="btn btn-secondary" id="btnReset">↻ Réinitialiser</button>
+                    <button class="btn btn-secondary" id="btnLeaderboard">🏆 Classement</button>
+                </div>
+            </div>
         </div>
 
-        <button class="btn btn-primary w-100 mb-3">Lancer la Partie</button>
+        <!-- Right Sidebar -->
+        <div class="game-zone">
+            <!-- Players -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-icon">👥</span>
+                    Joueurs
+                </div>
+                <div class="players-panel">
+                    <div class="player-badge">
+                        <div class="player-avatar">A</div>
+                        <div class="player-info">
+                            <div class="player-name">Alpha</div>
+                            <div class="player-status">En ligne</div>
+                        </div>
+                        <div class="player-wpm">85 WPM</div>
+                    </div>
+                    <div class="player-badge">
+                        <div class="player-avatar">B</div>
+                        <div class="player-info">
+                            <div class="player-name">Beta</div>
+                            <div class="player-status">En ligne</div>
+                        </div>
+                        <div class="player-wpm">72 WPM</div>
+                    </div>
+                    <div class="player-badge">
+                        <div class="player-avatar">C</div>
+                        <div class="player-info">
+                            <div class="player-name">Charlie</div>
+                            <div class="player-status">En ligne</div>
+                        </div>
+                        <div class="player-wpm">68 WPM</div>
+                    </div>
+                </div>
+            </div>
 
-        <h6>Progression</h6>
-        <h3 id="spanScore">@Model.Progress</h3>
-
-        <div class="form-group mb-3">
-            <textarea class="form-control" rows="4" readonly>@Model.TextToType</textarea>
-        </div>
-
-        <div class="form-group mb-3">
-            <textarea class="form-control" rows="3" id="txtInput"></textarea>
-        </div>
-
-        <div class="progress">
-            <div id="gameProgress" class="progress-bar bg-danger" style="width:@Model.Progress%"></div>
+            <!-- Chat -->
+            <div class="card" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="card-header">
+                    <span class="card-header-icon">💬</span>
+                    Chat
+                </div>
+                <div class="chat-container" style="flex: 1;">
+                    <div class="messages-box">
+                        <div class="message">
+                            <div class="message-avatar">A</div>
+                            <div class="message-content">
+                                <div class="message-author">Alpha</div>
+                                <div class="message-text">Bienvenue sur SpeedTyping! 🔥</div>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div class="message-avatar">B</div>
+                            <div class="message-content">
+                                <div class="message-author">Beta</div>
+                                <div class="message-text">Qui va gagner cette fois?</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="messageInput" placeholder="Message...">
+                        <button id="btnSend">Envoyer</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Results Modal -->
+<div class="modal" id="resultsModal">
+    <div class="modal-content">
+        <div class="modal-title">🎉 Partie Terminée!</div>
+        <div class="modal-stats">
+            <div class="modal-stat">
+                <div class="modal-stat-label">Vitesse</div>
+                <div class="modal-stat-value" id="modalWpm">0</div>
+            </div>
+            <div class="modal-stat">
+                <div class="modal-stat-label">Précision</div>
+                <div class="modal-stat-value" id="modalAccuracy">0%</div>
+            </div>
+            <div class="modal-stat">
+                <div class="modal-stat-label">Score</div>
+                <div class="modal-stat-value" id="modalScore">0</div>
+            </div>
+            <div class="modal-stat">
+                <div class="modal-stat-label">Caractères</div>
+                <div class="modal-stat-value" id="modalChars">0</div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
+            <button class="btn btn-secondary"
+                    onclick="document.getElementById('resultsModal').classList.remove('show')">Fermer</button>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/speedtyping.css" />
+}
+
+@section Scripts {
+    <script src="~/js/speedtyping.js"></script>
+}
