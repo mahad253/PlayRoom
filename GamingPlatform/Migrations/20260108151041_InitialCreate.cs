@@ -2,8 +2,6 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace GamingPlatform.Migrations
 {
     /// <inheritdoc />
@@ -25,16 +23,6 @@ namespace GamingPlatform.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sentences", x => x.Id);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Sentences",
-                columns: new[] { "Id", "Difficulty", "Language", "Text" },
-                values: new object[,]
-                {
-                    { 1, 1, "EN", "The quick brown fox jumps over the lazy dog." },
-                    { 2, 1, "FR", "Bonjour, comment allez-vous aujourd'hui ?" },
-                    { 3, 2, "FR", "La vie est une série de choix qui façonnent notre avenir." }
                 });
         }
 

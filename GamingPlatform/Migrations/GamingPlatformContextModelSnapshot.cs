@@ -43,29 +43,6 @@ namespace GamingPlatform.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sentences");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Difficulty = 1,
-                            Language = "EN",
-                            Text = "The quick brown fox jumps over the lazy dog."
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Difficulty = 1,
-                            Language = "FR",
-                            Text = "Bonjour, comment allez-vous aujourd'hui ?"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Difficulty = 2,
-                            Language = "FR",
-                            Text = "La vie est une série de choix qui façonnent notre avenir."
-                        });
                 });
 #pragma warning restore 612, 618
         }

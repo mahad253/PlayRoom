@@ -15,24 +15,23 @@ namespace GamingPlatform.Controllers
             _speedTypingService = speedTypingService;
         }
 
+        // GET: /api/SpeedTyping/sentences
+        [HttpGet("sentences")]
+        public async Task<IActionResult> GetAllSentences()
+        {
+            var sentences = await _speedTypingService.GetAllSentencesAsync();
+            return Ok(sentences); // JSON
+        }
+
         // GET: /api/SpeedTyping/random?difficulty=1&language=FR
         [HttpGet("random")]
         public async Task<IActionResult> GetRandomSentence(int difficulty = 1, string language = "FR")
         {
             var sentence = await _speedTypingService.GetRandomSentenceAsync(difficulty, language);
-
             if (sentence == null)
-            {
                 return NotFound(new { message = "Aucune phrase disponible." });
-            }
 
-            return Ok(new
-            {
-                id = sentence.Id,
-                text = sentence.Text,
-                difficulty = sentence.Difficulty,
-                language = sentence.Language
-            });
+            return Ok(sentence); // JSON
         }
     }
 }
