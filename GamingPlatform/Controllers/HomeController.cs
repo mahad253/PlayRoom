@@ -28,5 +28,11 @@ namespace GamingPlatform.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        
+        public IActionResult SpeedTyping()
+        {
+            // Affiche la page SpeedTyping avec juste l’UI
+            return View("~/Views/SpeedTyping/index.cshtml");
+        }
     }
 }

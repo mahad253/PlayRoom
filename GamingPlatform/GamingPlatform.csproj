@@ -19,4 +19,13 @@
     <None Include="wwwroot\css\speedtyping.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Users\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\SignalR\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

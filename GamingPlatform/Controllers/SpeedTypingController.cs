@@ -1,17 +1,38 @@
 using GamingPlatform.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-public class SpeedTypingController : Controller
+namespace GamingPlatform.Controllers
 {
-    public IActionResult Index()
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SpeedTypingController : ControllerBase
     {
-        var model = new TypingGameViewModel
+        private readonly SpeedTypingService _speedTypingService;
+
+        public SpeedTypingController(SpeedTypingService speedTypingService)
         {
-            
-            TextToType = "Practice makes perfect. The quick brown fox jumps over the lazy dog.",
-            TimeLimitSeconds = 60,
-            Progress = 0
-        };
-        return View(model);  // ✅ Passe le model, pas null
+            _speedTypingService = speedTypingService;
+        }
+
+        // GET: /api/SpeedTyping/random?difficulty=1&language=FR
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomSentence(int difficulty = 1, string language = "FR")
+        {
+            var sentence = await _speedTypingService.GetRandomSentenceAsync(difficulty, language);
+
+            if (sentence == null)
+            {
+                return NotFound(new { message = "Aucune phrase disponible." });
+            }
+
+            return Ok(new
+            {
+                id = sentence.Id,
+                text = sentence.Text,
+                difficulty = sentence.Difficulty,
+                language = sentence.Language
+            });
+        }
     }
 }

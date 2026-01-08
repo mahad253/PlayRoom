@@ -1,5 +1,5 @@
 // Variables
-const demoText = "Ceci est un test de speed typing en local. Tapez le texte le plus rapidement possible sans erreur. La vitesse et la précision sont essentielles pour obtenir un bon score!";
+let demoText = "Ceci est un test de speed typing en local. Tapez le texte le plus rapidement possible sans erreur. La vitesse et la précision sont essentielles pour obtenir un bon score!";
 
 let gameState = {
     isRunning: false,
@@ -29,18 +29,51 @@ const messageInput = document.getElementById('messageInput');
 const btnSend = document.getElementById('btnSend');
 const messagesBox = document.querySelector('.messages-box');
 const resultsModal = document.getElementById('resultsModal');
+const difficultyButtons = document.querySelectorAll(".diff-btn");
+
+
+
 
 // Difficulty Buttons
-document.querySelectorAll('.diff-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        gameState.currentDifficulty = e.target.dataset.diff;
+let currentDifficulty = 1; // 1 = facile, 2 = moyen, 3 = difficile
+difficultyButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        difficultyButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const diff = btn.dataset.diff; // easy/medium/hard
+        if (diff === "easy") currentDifficulty = 1;
+        if (diff === "medium") currentDifficulty = 2;
+        if (diff === "hard") currentDifficulty = 3;
     });
 });
 
 // Start Game
-btnStart.addEventListener('click', startGame);
+btnStart.addEventListener("click", async () => {
+    console.log("le jeux commence");
+    // Appel API pour récupérer une phrase
+    try {
+        const response = await fetch(`/api/SpeedTyping/random?difficulty=${currentDifficulty}&language=FR`);
+        if (!response.ok) {
+            alert("Impossible de récupérer une phrase.");
+            return;
+        }
+
+        const data = await response.json();
+
+        // Injecter le texte dans l'UI
+        textToTypeEl.innerText = data.text;
+        userInputEl.value = "";
+        userInputEl.disabled = false;
+        userInputEl.focus();
+        demoText = data.text;
+
+        // TODO: ici tu peux démarrer le timer, reset progression, etc.
+        startGame();
+    } catch (e) {
+        console.error(e);
+        alert("Erreur lors du chargement de la phrase.");
+    }
+});
 
 function startGame() {
     console.log("HELLO")

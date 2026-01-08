@@ -14,7 +14,7 @@ builder.Services.AddDbContext<GamingPlatformContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("GamingPlatformContext")
         ?? throw new InvalidOperationException(
-            "Connection string 'GamingPlatformContext' not found."
+            "Connection string 'ApplicationDbContext' not found."
         )
     )
 );
@@ -25,8 +25,10 @@ builder.Services.AddControllersWithViews();
 // SignalR
 builder.Services.AddSignalR();
 
-// Store des jeux (Puissance 4, etc.)
+// Store des jeux (Puissance 4, Morpion, etc.)
 builder.Services.AddSingleton<IGameStore, InMemoryGameStore>();
+
+builder.Services.AddScoped<SpeedTypingService>();
 
 var app = builder.Build();
 
@@ -40,7 +42,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Si vous ne gérez pas HTTPS en local, vous pouvez commenter cette ligne
+// HTTPS (peut être commenté en local si besoin)
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -70,6 +72,20 @@ app.MapHub<Connect4Hub>("/connect4Hub");
 
 // Morpion
 app.MapHub<MorpionHub>("/morpionHub");
+
+// =======================
+// DATABASE AUTO-MIGRATION
+// =======================
+// Applique automatiquement les migrations + HasData()
+
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<GamingPlatformContext>();
+        db.Database.Migrate();
+    }
+}
 
 // =======================
 // RUN
