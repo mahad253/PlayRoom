@@ -1,4 +1,3 @@
-using GamingPlatform.Data;
 using GamingPlatform.Hubs;
 using GamingPlatform.Services;
 using Microsoft.EntityFrameworkCore;
@@ -8,16 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 // =======================
 // SERVICES
 // =======================
-
-// Database
-builder.Services.AddDbContext<GamingPlatformContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("GamingPlatformContext")
-        ?? throw new InvalidOperationException(
-            "Connection string 'GamingPlatformContext' not found."
-        )
-    )
-);
 
 // MVC
 builder.Services.AddControllersWithViews();
