@@ -324,7 +324,6 @@
 /home/mahad/Bureau/GamingPlatform-M2-GIL/GamingPlatform/obj/Debug/net9.0/ref/GamingPlatform.dll
 /home/mahad/Bureau/GamingPlatform-M2-GIL/GamingPlatform/obj/Debug/net9.0/compressed/q7p2hymc0i-xs2cuhn2x1.gz
 /home/mahad/Bureau/PlayRoom/Platform/bin/Debug/net9.0/appsettings.Development.json
-/home/mahad/Bureau/PlayRoom/Platform/bin/Debug/net9.0/appsettings.json
 /home/mahad/Bureau/PlayRoom/Platform/bin/Debug/net9.0/libman.json
 /home/mahad/Bureau/PlayRoom/Platform/bin/Debug/net9.0/GamingPlatform.staticwebassets.endpoints.json
 /home/mahad/Bureau/PlayRoom/Platform/bin/Debug/net9.0/GamingPlatform.staticwebassets.runtime.json
