@@ -647,5 +647,5 @@
 /home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/GamingPlatform.genruntimeconfig.cache
 /home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/ref/GamingPlatform.dll
 /home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/GamingPlatform.sourcelink.json
-/home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/compressed/q7p2hymc0i-s2l1y21yyc.gz
-/home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/compressed/f5qkfn3j84-7wia4dbcqz.gz
+/home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/compressed/q7p2hymc0i-4dcaewi7q3.gz
+/home/mahad/Bureau/PlayRoom/Platform/obj/Debug/net9.0/compressed/f5qkfn3j84-ejl1wwf51g.gz

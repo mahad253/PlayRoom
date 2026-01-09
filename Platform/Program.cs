@@ -1,5 +1,6 @@
 using GamingPlatform.Data;
 using GamingPlatform.Hubs;
+using GamingPlatform.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,9 @@ builder.Services.AddControllersWithViews();
 
 // SignalR
 builder.Services.AddSignalR();
+
+// 🔥 LOBBY SERVICE (CERVEAU DU PROJET)
+builder.Services.AddSingleton<LobbyService>();
 
 var app = builder.Build();
 
@@ -52,14 +56,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
 
-// =======================
-// SIGNALR HUBS
-// =======================
-
-// Chat global (si tu le gardes)
-app.MapHub<ChatHub>("/chatHub");
-
-// Morpion (IMPORTANT)
+// Morpion (par lobby)
 app.MapHub<MorpionHub>("/morpionHub");
 
 // =======================

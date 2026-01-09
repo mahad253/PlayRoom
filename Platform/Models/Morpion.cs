@@ -4,34 +4,44 @@ namespace GamingPlatform.Models
 {
     public class Morpion
     {
-        public string[] Board { get; set; } = new string[9];
-        public string CurrentPlayer { get; set; } = "X";
-        public bool Finished { get; set; }
-        public string? Winner { get; set; }
+        public string[] Board { get; private set; } = new string[9];
+        public string CurrentPlayer { get; private set; } = "X";
+        public bool Finished { get; private set; }
+        public string? Winner { get; private set; }
 
         public Morpion()
         {
-            for (int i = 0; i < 9; i++)
-                Board[i] = "";
+            Reset();
         }
 
         public void Play(int index)
         {
-            // Sécurité indispensable
+            // Sécurités STRICTES
             if (Finished)
                 return;
 
             if (index < 0 || index >= 9)
                 return;
 
-            if (Board[index] != "")
+            if (!string.IsNullOrEmpty(Board[index]))
                 return;
 
             Board[index] = CurrentPlayer;
+
             CheckWinner();
 
             if (!Finished)
                 CurrentPlayer = CurrentPlayer == "X" ? "O" : "X";
+        }
+
+        public void Reset()
+        {
+            for (int i = 0; i < 9; i++)
+                Board[i] = "";
+
+            CurrentPlayer = "X";
+            Finished = false;
+            Winner = null;
         }
 
         private void CheckWinner()
@@ -49,7 +59,7 @@ namespace GamingPlatform.Models
                 string b = Board[wins[i, 1]];
                 string c = Board[wins[i, 2]];
 
-                if (a != "" && a == b && b == c)
+                if (!string.IsNullOrEmpty(a) && a == b && b == c)
                 {
                     Winner = a;
                     Finished = true;
@@ -57,7 +67,8 @@ namespace GamingPlatform.Models
                 }
             }
 
-            if (Board.All(x => x != ""))
+            // Match nul
+            if (Board.All(x => !string.IsNullOrEmpty(x)))
             {
                 Winner = "Draw";
                 Finished = true;
