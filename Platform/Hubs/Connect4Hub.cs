@@ -7,31 +7,87 @@ namespace GamingPlatform.Hubs;
 public class Connect4Hub : Hub
 {
     private readonly IGameStore _store;
-    public Connect4Hub(IGameStore store) => _store = store;
 
-    public async Task JoinLobby(string lobbyId)
+    public Connect4Hub(IGameStore store)
     {
+        _store = store;
+    }
 
+    // ======================
+    // JOIN LOBBY
+    // ======================
+    public async Task JoinLobby(string lobbyId, string pseudo)
+    {
+        var game = _store.GetOrCreate(lobbyId);
+        var lobby = _store.GetLobbyInfo(lobbyId);
+
+        // Ajouter le joueur s'il n'existe pas déjà
+        if (!lobby.Players.Any(p => p.ConnectionId == Context.ConnectionId))
+        {
+            lobby.Players.Add(new Connect4LobbyPlayer
+            {
+                ConnectionId = Context.ConnectionId,
+                Pseudo = pseudo,
+                IsHost = false,
+                Color = 0
+            });
+
+
+            // Premier joueur = host
+            if (lobby.Players.Count == 1)
+            {
+                lobby.HostConnectionId = Context.ConnectionId;
+                lobby.Players[0].IsHost = true;
+            }
+
+        }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
-        var game = _store.GetOrCreate(lobbyId);
-          // Si personne n'a encore rejoint, on reset pour être sûr
-        if (game.RedId is null && game.YellowId is null)
+        await Clients.Group(lobbyId).SendAsync("LobbyUpdated", new
         {
-            game.Reset();
-        }
-
-        if (game.RedId is null) game.RedId = Context.ConnectionId;
-        else if (game.YellowId is null && game.RedId != Context.ConnectionId) game.YellowId = Context.ConnectionId;
-
-        if (game.RedId != null && game.YellowId != null)
-            game.Status = GameStatus.InProgress;
-
-        await Clients.Group(lobbyId).SendAsync("GameStateUpdated", ToDto(game));
-        Console.WriteLine($"[C4] JoinLobby lobby={lobbyId} status={game.Status} turn={game.Turn} moves={game.MoveCount} winner={game.Winner} draw={game.IsDraw} red={(game.RedId!=null)} yellow={(game.YellowId!=null)}");
+            players = lobby.Players.Select(p => new
+            {
+                pseudo = p.Pseudo,
+                isHost = p.ConnectionId == lobby.HostConnectionId
+            }),
+            canStart = lobby.Players.Count == 2 && !lobby.Started
+        });
     }
 
+    // ======================
+    // START GAME (HOST ONLY)
+    // ======================
+    public async Task StartGame(string lobbyId)
+    {
+        var game = _store.GetOrCreate(lobbyId);
+        var lobby = _store.GetLobbyInfo(lobbyId);
+
+        if (Context.ConnectionId != lobby.HostConnectionId)
+            throw new HubException("Seul le host peut démarrer la partie.");
+
+        if (lobby.Players.Count != 2)
+            throw new HubException("Il faut exactement 2 joueurs.");
+
+        lobby.Started = true;
+
+        // Assignation couleurs
+        game.Reset();
+        game.RedId = lobby.Players[0].ConnectionId;
+        game.YellowId = lobby.Players[1].ConnectionId;
+        game.Status = GameStatus.InProgress;
+
+        await Clients.Group(lobbyId).SendAsync("ChatSystem", new
+        {
+            message = "🎮 La partie commence !"
+        });
+
+        await Clients.Group(lobbyId).SendAsync("GameStateUpdated", ToDto(game));
+    }
+
+    // ======================
+    // PLAY MOVE
+    // ======================
     public async Task PlayMove(string lobbyId, int col)
     {
         if (!_store.TryGet(lobbyId, out var game))
@@ -42,14 +98,14 @@ public class Connect4Hub : Hub
 
         if (game.Status != GameStatus.InProgress)
         {
-            await Clients.Caller.SendAsync("Error", "Partie non démarrée / déjà finie");
+            await Clients.Caller.SendAsync("Error", "La partie n'a pas commencé");
             return;
         }
 
         var me = GetMyColor(game);
         if (me == Cell.Empty)
         {
-            await Clients.Caller.SendAsync("Error", "Vous n'êtes pas joueur dans ce lobby");
+            await Clients.Caller.SendAsync("Error", "Vous n'êtes pas joueur");
             return;
         }
 
@@ -93,13 +149,50 @@ public class Connect4Hub : Hub
         await Clients.Group(lobbyId).SendAsync("GameStateUpdated", ToDto(game));
     }
 
-    public override async Task OnDisconnectedAsync(Exception? exception)
+    // ======================
+    // CHAT
+    // ======================
+    public async Task SendChatMessage(string lobbyId, string pseudo, string message)
     {
-        // Option simple : on ne supprime pas tout de suite, mais on peut finir la partie
-        // (tu peux améliorer après)
+        if (string.IsNullOrWhiteSpace(message)) return;
+
+        await Clients.Group(lobbyId).SendAsync("ChatMessage", new
+        {
+            pseudo,
+            message
+        });
+    }
+
+    // ======================
+    // DISCONNECT
+    // ======================
+   public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        if (_store.TryRemovePlayer(Context.ConnectionId, out var lobbyId, out var lobby))
+        {
+            await Clients.Group(lobbyId).SendAsync("ChatSystem", new
+            {
+                message = "❌ Un joueur a quitté le lobby"
+            });
+
+            await Clients.Group(lobbyId).SendAsync("LobbyUpdated", new
+            {
+                players = lobby.Players.Select(p => new
+                {
+                    pseudo = p.Pseudo,
+                    isHost = p.IsHost
+                }),
+                canStart = lobby.Players.Count == 2 && !lobby.Started
+            });
+        }
+
         await base.OnDisconnectedAsync(exception);
     }
 
+
+    // ======================
+    // HELPERS
+    // ======================
     private Cell GetMyColor(Connect4State g)
     {
         if (g.RedId == Context.ConnectionId) return Cell.Red;
