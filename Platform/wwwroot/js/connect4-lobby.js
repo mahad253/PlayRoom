@@ -1,43 +1,60 @@
 (() => {
-  const lobbyId = window.C4_LOBBY_ID || document.getElementById("lobbyId")?.textContent?.trim();
-  let pseudo = window.C4_PSEUDO || "";
+  const lobbyId =
+    (window.CONNECT4_LOBBY || "").trim() ||
+    document.getElementById("lobbyId")?.textContent?.trim();
+
+  const pseudo = (window.CONNECT4_PSEUDO || "").trim();
 
   const statusEl = document.getElementById("status");
   const boardEl = document.getElementById("board");
 
   const playersListEl = document.getElementById("playersList");
   const startBtn = document.getElementById("startBtn");
+  const leaveBtn = document.getElementById("leaveBtn");
 
-  const chatBox = document.getElementById("chatBox");
+  const chatBox = document.getElementById("chatMessages"); // ✅ bon id
   const chatInput = document.getElementById("chatInput");
   const chatSendBtn = document.getElementById("chatSendBtn");
 
   const copyLinkBtn = document.getElementById("copyLinkBtn");
-  const shareLink = document.getElementById("shareLink");
+  const copyToast = document.getElementById("copyToast");
+  const restartBtn = document.getElementById("restartBtn");
+
 
   let isHost = false;
   let canStart = false;
   let lastState = null;
 
   function setStatus(text, type = "info") {
-    statusEl.className = `alert alert-${type} py-2 mb-0`;
+    // ✅ status est un badge, pas une alert
+    const map = {
+      info: "bg-info text-dark",
+      warning: "bg-warning text-dark",
+      success: "bg-success",
+      danger: "bg-danger",
+      secondary: "bg-secondary",
+    };
+    statusEl.className = `badge ${map[type] ?? "bg-info text-dark"} px-3 py-2`;
     statusEl.textContent = text;
   }
 
-  function ensurePseudo() {
-    pseudo = (pseudo || "").trim();
-    if (pseudo.length >= 2) return;
+  // ✅ pas de prompt : si pseudo absent => retour Index
+  if (!pseudo || pseudo.length < 2) {
+    window.location.href = "/Connect4/Index";
+    return;
+  }
 
-    const p = prompt("Choisis un pseudo (2-20 caractères) :");
-    if (!p) return;
-    pseudo = p.trim().slice(0, 20);
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function appendChatLine(html) {
-    // remove placeholder
-    const first = chatBox.firstElementChild;
-    if (first && first.classList.contains("text-muted")) chatBox.innerHTML = "";
-
+    if (!chatBox) return;
     const div = document.createElement("div");
     div.className = "mb-1";
     div.innerHTML = html;
@@ -48,27 +65,27 @@
   function renderPlayers(players) {
     playersListEl.innerHTML = "";
     for (const p of players) {
-      const li = document.createElement("li");
-      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      const row = document.createElement("div");
+      row.className = "d-flex justify-content-between align-items-center border rounded-3 px-3 py-2";
 
       const left = document.createElement("div");
+      left.className = "fw-semibold";
       left.textContent = p.pseudo;
 
       if (p.isHost) {
         const badge = document.createElement("span");
-        badge.className = "badge bg-dark ms-2";
+        badge.className = "badge bg-dark text-white ms-2";
         badge.textContent = "Host";
         left.appendChild(badge);
       }
 
-      li.appendChild(left);
-      playersListEl.appendChild(li);
+      row.appendChild(left);
+      playersListEl.appendChild(row);
     }
   }
 
   function canPlay(state) {
     if (!state) return false;
-    // support camelCase/PascalCase
     const status = state.status ?? state.Status;
     return status === "InProgress";
   }
@@ -79,27 +96,19 @@
     const isDraw = state.isDraw ?? state.IsDraw;
     const winner = state.winner ?? state.Winner;
 
-    if (status === "WaitingPlayers") {
-      setStatus("En attente d’un 2e joueur…", "warning");
-      return;
-    }
-    if (status === "InProgress") {
-      setStatus(`Partie en cours — Tour: ${turn === 1 ? "Rouge" : "Jaune"}`, "info");
-      return;
-    }
+    if (status === "WaitingPlayers") return setStatus("En attente d’un 2e joueur…", "warning");
+    if (status === "InProgress") return setStatus(`Tour: ${turn === 1 ? "Rouge" : "Jaune"}`, "info");
     if (status === "Finished") {
-      if (isDraw) setStatus("Match nul ✨", "secondary");
-      else if (winner === 1) setStatus("Victoire: Rouge 🎉", "success");
-      else if (winner === 2) setStatus("Victoire: Jaune 🎉", "success");
-      else setStatus("Partie terminée.", "secondary");
-      return;
+      if (isDraw) return setStatus("Match nul ✨", "secondary");
+      if (winner === 1) return setStatus("Victoire: Rouge 🎉", "success");
+      if (winner === 2) return setStatus("Victoire: Jaune 🎉", "success");
+      return setStatus("Partie terminée.", "secondary");
     }
     setStatus("Statut inconnu.", "secondary");
   }
 
   function renderBoard(state) {
     boardEl.innerHTML = "";
-
     const board = state.board ?? state.Board;
     if (!board || !board[0]) return;
 
@@ -129,65 +138,95 @@
     .withAutomaticReconnect()
     .build();
 
-  // --- Events
-  connection.on("LobbyUpdated", (payload) => {
-    const players = payload.players ?? payload.Players ?? [];
-    renderPlayers(players);
+ connection.on("LobbyUpdated", (payload) => {
+  const players = payload.players ?? payload.Players ?? [];
+  renderPlayers(players);
 
-    // host / canStart
-    isHost = players.some(p => (p.pseudo === pseudo) && (p.isHost === true));
-    canStart = !!(payload.canStart ?? payload.CanStart);
+  // Déterminer host et possibilité de démarrer
+  isHost = players.some(p => p.pseudo === pseudo && p.isHost === true);
+  canStart = !!(payload.canStart ?? payload.CanStart);
 
-    // Start button visible seulement si host et canStart
-    if (isHost && canStart) startBtn.classList.remove("d-none");
-    else startBtn.classList.add("d-none");
+  // ▶️ Bouton Démarrer
+  startBtn.disabled = !(isHost && canStart);
 
-    // Status
-    if (!canStart && (players.length < 2)) setStatus("En attente d’un 2e joueur…", "warning");
-    else if (canStart && isHost) setStatus("2 joueurs présents — tu peux démarrer ✅", "success");
-    else if (canStart && !isHost) setStatus("2 joueurs présents — en attente du host…", "info");
-  });
+  if (isHost && canStart) {
+    startBtn.classList.remove("d-none");
+  } else {
+    startBtn.classList.add("d-none");
+  }
+
+  // 🔄 Si on peut (re)démarrer, on cache Rejouer
+  if (canStart) {
+    restartBtn?.classList.add("d-none");
+  }
+
+  // 🟦 Status texte
+  if (!canStart && players.length < 2) {
+    setStatus("En attente d’un 2e joueur…", "warning");
+  } else if (canStart && isHost) {
+    setStatus("2 joueurs présents — tu peux démarrer ✅", "success");
+  } else if (canStart && !isHost) {
+    setStatus("2 joueurs présents — en attente du host…", "info");
+  }
+});
+
 
   connection.on("GameStateUpdated", (state) => {
-    lastState = state;
-    updateStatusFromState(state);
-    renderBoard(state);
+  lastState = state;
+  updateStatusFromState(state);
+  renderBoard(state);
 
-    // Une fois la partie commencée, on cache start
+  const status = state.status ?? state.Status;
+
+  if (status === "InProgress") {
     startBtn.classList.add("d-none");
-  });
+    restartBtn?.classList.add("d-none");
+  }
 
+  if (status === "Finished") {
+    startBtn.classList.add("d-none");
+    restartBtn?.classList.remove("d-none"); // ✅ apparaît à la fin
+  }
+
+  if (status === "WaitingPlayers") {
+    // on laisse LobbyUpdated décider si Start est visible pour le host
+    restartBtn?.classList.add("d-none");
+  }
+});
+
+
+  // ✅ Chat events (doit matcher le serveur)
   connection.on("ChatMessage", (msg) => {
     const p = msg.pseudo ?? msg.Pseudo ?? "???";
     const m = msg.message ?? msg.Message ?? "";
     appendChatLine(`<span class="text-info fw-bold">${escapeHtml(p)}</span> : ${escapeHtml(m)}`);
   });
 
+
+
   connection.on("ChatSystem", (msg) => {
     const m = msg.message ?? msg.Message ?? "";
     appendChatLine(`<span class="text-muted">[Système]</span> ${escapeHtml(m)}`);
   });
 
-  connection.on("Error", (msg) => {
-    setStatus(msg, "danger");
-  });
+  connection.on("Error", (msg) => setStatus(msg, "danger"));
 
-  connection.onclose((err) => {
-    console.error(err);
-    setStatus("Connexion fermée (voir console).", "danger");
-  });
-
-  // --- Actions
   startBtn.addEventListener("click", () => {
     connection.invoke("StartGame", lobbyId)
       .catch(err => setStatus(err?.toString?.() ?? String(err), "danger"));
   });
+   restartBtn?.addEventListener("click", () => {
+  connection.invoke("RestartGame", lobbyId)
+    .catch(err => setStatus(err?.toString?.() ?? String(err), "danger"));
+});
+
 
   function sendChat() {
     const text = (chatInput.value || "").trim();
     if (!text) return;
     chatInput.value = "";
-    connection.invoke("SendChatMessage", lobbyId, pseudo, text).catch(console.error);
+    connection.invoke("SendChatMessage", lobbyId, pseudo, text)
+      .catch(err => console.error(err));
   }
 
   chatSendBtn.addEventListener("click", sendChat);
@@ -195,32 +234,32 @@
     if (e.key === "Enter") sendChat();
   });
 
-  copyLinkBtn?.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(shareLink.value);
-      copyLinkBtn.textContent = "Copié ✅";
-      setTimeout(() => (copyLinkBtn.textContent = "Copier"), 1200);
-    } catch {
-      // fallback
-      shareLink.select();
-      document.execCommand("copy");
-    }
+  // ✅ Copier lien + toast
+ copyLinkBtn?.addEventListener("click", async () => {
+  // Construire un lien JOIN propre (sans pseudo)
+  const joinUrl = `${window.location.origin}/Connect4/Lobby/${encodeURIComponent(lobbyId)}`;
+
+
+  try {
+    await navigator.clipboard.writeText(joinUrl);
+
+    const toast = document.getElementById("copyToast");
+    toast?.classList.add("show");
+    setTimeout(() => toast?.classList.remove("show"), 1500);
+  } catch {
+    prompt("Copie ce lien :", joinUrl);
+  }
+});
+
+
+
+  leaveBtn?.addEventListener("click", () => {
+    window.location.href = "/";
   });
 
-  // Utils
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  async function start() {
-    ensurePseudo();
-    if (!pseudo || pseudo.length < 2) {
-      setStatus("Pseudo requis pour rejoindre le lobby.", "danger");
+  (async function start() {
+    if (!lobbyId) {
+      setStatus("LobbyId manquant.", "danger");
       return;
     }
 
@@ -232,7 +271,5 @@
       console.error(e);
       setStatus(e?.toString?.() ?? String(e), "danger");
     }
-  }
-
-  start();
+  })();
 })();

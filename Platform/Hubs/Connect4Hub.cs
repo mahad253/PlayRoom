@@ -222,4 +222,42 @@ public class Connect4Hub : Hub
             HasYellow = g.YellowId != null
         };
     }
+
+public async Task RestartGame(string lobbyId)
+{
+    // 1) récupérer lobby + game
+    var lobby = _store.GetLobbyInfo(lobbyId);
+
+    if (!_store.TryGet(lobbyId, out var game))
+        game = _store.GetOrCreate(lobbyId);
+
+    // 2) autorisation : seulement le host (celui qui a IsHost=true dans lobby)
+    var host = lobby.Players.FirstOrDefault(p => p.IsHost);
+    if (host == null || host.ConnectionId != Context.ConnectionId)
+    {
+        await Clients.Caller.SendAsync("Error", "Seul le host peut relancer.");
+        return;
+    }
+
+    // 3) reset jeu (plateau + winner etc.)
+    game.Reset();
+
+    // 4) IMPORTANT : permettre de redémarrer
+    lobby.Started = false;
+
+    // 5) si 2 joueurs sont encore là, on reste en "WaitingPlayers" mais canStart = true
+    if (game.RedId != null && game.YellowId != null)
+        game.Status = GameStatus.WaitingPlayers;
+
+    // 6) notifier lobby + état de jeu
+    await Clients.Group(lobbyId).SendAsync("LobbyUpdated", new
+    {
+        players = lobby.Players.Select(p => new { pseudo = p.Pseudo, isHost = p.IsHost }),
+        canStart = lobby.Players.Count == 2 && !lobby.Started
+    });
+
+    await Clients.Group(lobbyId).SendAsync("GameStateUpdated", ToDto(game));
+}
+
+
 }

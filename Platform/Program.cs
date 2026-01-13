@@ -22,6 +22,15 @@ builder.Services.AddDbContext<GamingPlatformContext>(options =>
 // MVC
 builder.Services.AddControllersWithViews();
 
+// ✅ Session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // SignalR
 builder.Services.AddSignalR();
 
@@ -47,6 +56,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// ✅ session DOIT être ici
+app.UseSession();
+
 app.UseAuthorization();
 
 // =======================
@@ -70,9 +82,5 @@ app.MapHub<Connect4Hub>("/connect4Hub");
 
 // Morpion
 app.MapHub<MorpionHub>("/morpionHub");
-
-// =======================
-// RUN
-// =======================
 
 app.Run();

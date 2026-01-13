@@ -1,84 +1,131 @@
 @{
-    ViewData["Title"] = "Puissance 4 - Lobby";
-    var lobbyId = (string)(ViewBag.LobbyId ?? "");
-    var pseudo = (string)(ViewBag.Pseudo ?? "");
+    ViewData["Title"] = "Lobby Puissance 4";
+    string lobbyId = (string)ViewBag.LobbyId;
+    string pseudo = ViewBag.Pseudo as string ?? "";
 }
 
-<link rel="stylesheet" href="~/css/connect4.css" />
+@section Styles {
+    <link rel="stylesheet" href="~/css/connect4.css" asp-append-version="true" />
+}
 
-<div class="container py-4">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <h2 class="mb-0">Puissance 4</h2>
+<section class="container lobby-page">
 
-        <div class="text-end">
-            <div class="small text-muted">Lien lobby</div>
-            <div class="d-flex gap-2">
-                <input id="shareLink" class="form-control form-control-sm" style="width:360px"
-                       value="@($"{Context.Request.Scheme}://{Context.Request.Host}/Connect4/Lobby/{lobbyId}")"
-                       readonly />
-                <button id="copyLinkBtn" class="btn btn-sm btn-outline-secondary">Copier</button>
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">🔵 Lobby Puissance 4</h2>
+            <div class="text-muted small">
+                Lobby ID : <span class="fw-semibold" id="lobbyId">@lobbyId</span>
             </div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center mt-2 mt-md-0">
+            <button id="copyLinkBtn" class="btn btn-outline-primary rounded-pill px-3">
+                <i class="fas fa-link me-2"></i> Copier le lien
+            </button>
         </div>
     </div>
 
-    <div class="mb-2">
-        <span class="badge bg-secondary">Lobby</span>
-        <code id="lobbyId">@lobbyId</code>
+    <div id="copyToast" class="copy-toast" role="status" aria-live="polite">
+        ✅ Lien copié dans le presse-papiers
     </div>
 
-    <div class="row g-3">
-        <!-- Col gauche : joueurs + actions + chat -->
+    <!-- MAIN GRID -->
+    <div class="row g-4 mt-2">
+
+        <!-- LEFT -->
         <div class="col-lg-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="mb-2">Joueurs</h5>
-                        <button id="startBtn" class="btn btn-sm btn-success d-none">Démarrer</button>
-                    </div>
 
-                    <ul id="playersList" class="list-group mb-3"></ul>
+            <!-- PLAYERS -->
+            <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold mb-3">👥 Joueurs</h5>
 
-                    <div id="status" class="alert alert-info py-2 mb-0">Connexion…</div>
+                <div id="playersList" class="d-flex flex-column gap-2">
+                    <!-- rempli par JS -->
                 </div>
-            </div>
 
-            <div class="card shadow-sm mt-3">
-                <div class="card-body">
-                    <h5 class="mb-2">Chat</h5>
+                <div class="mt-3 d-flex gap-2">
+    <button id="startBtn"
+            class="btn btn-success rounded-pill px-3"
+            disabled>
+        ▶ Démarrer
+    </button>
 
-                    <div id="chatBox" style="height:260px; overflow:auto; background:#0b1220; border-radius:10px; padding:10px;">
-                        <div class="text-muted small">Aucun message pour l’instant.</div>
-                    </div>
+    <button id="restartBtn"
+            class="btn btn-warning rounded-pill px-3 d-none">
+        🔄 Rejouer
+    </button>
 
-                    <div class="input-group mt-2">
-                        <input id="chatInput" class="form-control" placeholder="Écrire un message…" maxlength="200" />
-                        <button id="chatSendBtn" class="btn btn-primary">Envoyer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Col droite : jeu -->
-        <div class="col-lg-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="small text-muted mb-2">
-                        Clique une colonne pour jouer (quand la partie est démarrée).
-                    </div>
-
-                    <div id="board" class="c4-board" aria-label="Grille puissance 4"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <button id="leaveBtn"
+            class="btn btn-outline-secondary rounded-pill px-3">
+        Quitter
+    </button>
 </div>
 
-<!-- SignalR : tu peux garder le CDN pour éviter les soucis libman -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+                <small class="text-muted d-block mt-2">
+                    Vous êtes : <span class="fw-semibold" id="myPseudo">@pseudo</span>
+                </small>
+            </div>
+
+            <!-- CHAT -->
+            <div class="bg-white rounded-4 shadow-sm p-4 chat-card">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="fw-bold mb-0">💬 Chat</h5>
+                    <small class="text-muted">Lobby</small>
+                </div>
+
+                <div id="chatMessages" class="chat-messages"></div>
+
+                <div class="chat-input mt-3">
+                    <input id="chatInput"
+                           type="text"
+                           class="form-control"
+                           placeholder="Écris un message…"
+                           maxlength="200"
+                           autocomplete="off" />
+
+                    <button id="chatSendBtn"
+                            type="button"
+                            class="btn btn-primary rounded-pill px-3">
+                        Envoyer
+                    </button>
+                </div>
+
+                <small class="text-muted d-block mt-2">
+                    Astuce : appuie sur Entrée pour envoyer
+                </small>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-8">
+
+            <div class="bg-white rounded-4 shadow-sm p-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">🎮 Partie</h5>
+                    <div id="status" class="badge bg-info text-dark px-3 py-2">Connexion…</div>
+                </div>
+
+                <div id="board" class="c4-board" aria-label="Grille puissance 4"></div>
+
+                <div class="text-muted small mt-3">
+                    Règle : aligne 4 jetons horizontalement, verticalement ou en diagonale.
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+
+
+</section>
 
 <script>
-  window.C4_LOBBY_ID = "@lobbyId";
-  window.C4_PSEUDO = "@pseudo";
+    window.CONNECT4_LOBBY = "@lobbyId";
+    window.CONNECT4_PSEUDO = "@pseudo";
 </script>
 
-<script src="~/js/connect4-lobby.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script src="~/js/connect4-lobby.js" asp-append-version="true"></script>

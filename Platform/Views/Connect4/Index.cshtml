@@ -1,6 +1,9 @@
 @{
     ViewData["Title"] = "Puissance 4";
+    var lobbyId = Context.Request.Query["lobbyId"].ToString();
+    bool hasLobby = !string.IsNullOrWhiteSpace(lobbyId);
 }
+<div class="container py-5 connect4-index-page" style="max-width:500px;">
 
 <div class="container py-5" style="max-width:500px;">
     <h2 class="mb-3">Puissance 4</h2>
@@ -10,12 +13,26 @@
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
-    <form method="post" asp-action="Create">
+    @if (hasLobby)
+    {
+        <div class="alert alert-info">
+            Rejoindre la partie : <b>@lobbyId</b>
+        </div>
+    }
+
+    <form method="post" asp-action="@(hasLobby ? "Join" : "Create")">
+        @if (hasLobby)
+        {
+            <input type="hidden" name="lobbyId" value="@lobbyId" />
+        }
+
         <div class="mb-3">
             <label class="form-label">Pseudo</label>
             <input name="pseudo" class="form-control" required minlength="2" maxlength="20" />
         </div>
 
-        <button class="btn btn-dark w-100">Créer une partie</button>
+        <button class="btn btn-dark w-100">
+            @(hasLobby ? "Rejoindre" : "Créer une partie")
+        </button>
     </form>
 </div>

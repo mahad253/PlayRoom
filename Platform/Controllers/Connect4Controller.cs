@@ -4,41 +4,80 @@ namespace GamingPlatform.Controllers;
 
 public class Connect4Controller : Controller
 {
-    // Page d'accueil Puissance 4 (optionnelle)
-    public IActionResult Index()
+    private const string SessionPseudoKey = "pseudo";
+
+    // GET /Connect4/Index?lobbyId=...
+    public IActionResult Index(string? lobbyId = null)
     {
+        ViewBag.LobbyId = lobbyId ?? "";
         return View();
     }
 
-    // POST /Connect4/Create
-    // Appelé depuis un bouton "Créer une partie"
+    // POST /Connect4/Create  (crée une nouvelle partie)
     [HttpPost]
     public IActionResult Create(string pseudo)
     {
-        if (string.IsNullOrWhiteSpace(pseudo))
+        pseudo = (pseudo ?? "").Trim();
+
+        if (pseudo.Length < 2 || pseudo.Length > 20)
         {
-            TempData["Error"] = "Pseudo requis.";
+            TempData["Error"] = "Pseudo requis (2 à 20 caractères).";
             return RedirectToAction("Index");
         }
 
+        // ✅ stocker pseudo en session
+        HttpContext.Session.SetString(SessionPseudoKey, pseudo);
+
+        // ✅ créer nouveau lobby
         var lobbyId = Guid.NewGuid().ToString("N");
 
-        return RedirectToAction("Lobby", new { id = lobbyId, pseudo });
+        // ✅ aller au lobby (sans pseudo dans l'URL)
+        return RedirectToAction("Lobby", new { id = lobbyId });
     }
 
-    // GET /Connect4/Lobby/{id}?pseudo=...
-    [HttpGet("/Connect4/Lobby/{id}")]
-    public IActionResult Lobby(string id, string? pseudo)
+    // POST /Connect4/Join  (rejoint une partie existante)
+    [HttpPost]
+    public IActionResult Join(string lobbyId, string pseudo)
     {
-        if (string.IsNullOrWhiteSpace(pseudo))
+        lobbyId = (lobbyId ?? "").Trim();
+        pseudo = (pseudo ?? "").Trim();
+
+        if (string.IsNullOrWhiteSpace(lobbyId))
         {
-            // fallback sécurité : on demandera le pseudo côté JS
-            pseudo = "";
+            TempData["Error"] = "Lobby invalide.";
+            return RedirectToAction("Index");
         }
+
+        if (pseudo.Length < 2 || pseudo.Length > 20)
+        {
+            TempData["Error"] = "Pseudo requis (2 à 20 caractères).";
+            return RedirectToAction("Index", new { lobbyId });
+        }
+
+        // ✅ stocker pseudo en session
+        HttpContext.Session.SetString(SessionPseudoKey, pseudo);
+
+        // ✅ rejoindre lobby existant
+        return RedirectToAction("Lobby", new { id = lobbyId });
+    }
+
+    // GET /Connect4/Lobby/{id}
+    [HttpGet("/Connect4/Lobby/{id}")]
+    public IActionResult Lobby(string id)
+    {
+        id = (id ?? "").Trim();
+        if (string.IsNullOrWhiteSpace(id))
+            return RedirectToAction("Index");
+
+        var pseudo = (HttpContext.Session.GetString(SessionPseudoKey) ?? "").Trim();
+
+        // ✅ si pas de pseudo -> demander via Index mais en gardant lobbyId
+        if (pseudo.Length < 2)
+            return RedirectToAction("Index", new { lobbyId = id });
 
         ViewBag.LobbyId = id;
         ViewBag.Pseudo = pseudo;
 
-        return View();
+        return View(); // Views/Connect4/Lobby.cshtml
     }
 }
