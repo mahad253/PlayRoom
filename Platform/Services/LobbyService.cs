@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using GamingPlatform.Models;
+using PlayRoom.Models;
 
 namespace GamingPlatform.Services;
 
@@ -150,6 +151,53 @@ public class LobbyService
 
             lobby.Game = new Morpion();
             lobby.Status = LobbyStatus.Started;
+            return lobby;
+        }
+    }
+    
+    public Lobby StartSpeedTyping(string lobbyId, string callerConnectionId, string textToType, int durationSeconds)
+    {
+        var lobby = GetLobby(lobbyId) ?? throw new InvalidOperationException("Lobby introuvable.");
+        lock (lobby)
+        {
+            if (lobby.HostConnectionId != callerConnectionId)
+                throw new InvalidOperationException("Seul le host peut lancer la partie.");
+
+            if (lobby.Status != LobbyStatus.Waiting)
+                throw new InvalidOperationException("Partie déjà démarrée.");
+
+            if (lobby.Players.Count < 2)
+                throw new InvalidOperationException("Il faut au moins 2 joueurs.");
+
+            lobby.SpeedTypingGame ??= new SpeedTypingGame();
+            lobby.SpeedTypingGame.Init(
+                textToType,
+                durationSeconds,
+                lobby.Players.Select(p => (p.ConnectionId, p.Pseudo))
+            );
+            lobby.SpeedTypingGame.Start();
+
+            lobby.Status = LobbyStatus.Started;
+            return lobby;
+        }
+    }
+    
+    public Lobby UpdateSpeedTypingProgress(string lobbyId, string callerConnectionId, int totalTyped, int correctChars)
+    {
+        var lobby = GetLobby(lobbyId) ?? throw new InvalidOperationException("Lobby introuvable.");
+        lock (lobby)
+        {
+            if (lobby.GameType != "SpeedTyping")
+                throw new InvalidOperationException("Mauvais type de jeu.");
+            if (lobby.Status != LobbyStatus.Started)
+                throw new InvalidOperationException("La partie n'a pas commencé.");
+
+            lobby.SpeedTypingGame ??= new SpeedTypingGame();
+            lobby.SpeedTypingGame.UpdateProgress(callerConnectionId, totalTyped, correctChars);
+
+            if (lobby.SpeedTypingGame.Finished)
+                lobby.Status = LobbyStatus.Finished;
+
             return lobby;
         }
     }

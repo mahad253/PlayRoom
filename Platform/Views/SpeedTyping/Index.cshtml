@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "SpeedTyping - Accueil";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4">SpeedTyping</h1>
+    <p class="mb-4">
+        Défiez vos amis dans une course de frappe rapide synchronisée en temps réel.
+    </p>
+
+    @if (TempData["Error"] is string err && !string.IsNullOrWhiteSpace(err))
+    {
+        <div class="alert alert-danger">@err</div>
+    }
+
+    <form asp-controller="SpeedTyping"
+          asp-action="Create"
+          method="post"
+          class="row g-3">
+
+        <div class="col-md-6">
+            <label for="pseudo" class="form-label">Pseudo</label>
+            <input type="text"
+                   class="form-control"
+                   id="pseudo"
+                   name="pseudo"
+                   required />
+        </div>
+
+        <div class="col-md-3">
+            <label for="maxPlayers" class="form-label">Nombre de joueurs max</label>
+            <input type="number"
+                   class="form-control"
+                   id="maxPlayers"
+                   name="maxPlayers"
+                   min="2"
+                   max="8"
+                   value="4" />
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+                Créer un lobby
+            </button>
+        </div>
+    </form>
+</div>

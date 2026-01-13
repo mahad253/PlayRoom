@@ -1,0 +1,69 @@
+@{
+ViewData["Title"] = "Rejoindre un lobby";
+var lobbyId = ViewBag.LobbyId as string ?? "";
+}
+
+<div class="join-container">
+    <form id="pseudoForm"
+          asp-action="Lobby"
+          asp-controller="SpeedTyping"
+          method="get"
+          class="join-form">
+        <input type="hidden" name="id" value="@lobbyId" />
+        <input type="text"
+               name="pseudo"
+               id="pseudoInput"
+               class="form-control"
+               placeholder="Entrez votre pseudo"
+               required />
+        <button type="submit" class="btn btn-primary">Rejoindre</button>
+    </form>
+</div>
+
+@section Styles {
+<style>
+    .join-container {
+        margin-top: 20vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    .join-form {
+        display: flex;
+        gap: 0.5rem;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .join-form input[type="text"] {
+        flex: 1;
+    }
+</style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Join page loaded");
+
+            const form = document.getElementById("pseudoForm");
+            const input = document.getElementById("pseudoInput");
+
+            if (!form || !input) return;
+
+            form.addEventListener("submit", (e) => {
+                const value = input.value.trim();
+
+                if (!value) {
+                    e.preventDefault();
+                    alert("Veuillez entrer un pseudo.");
+                    return;
+                }
+
+                console.log("Join avec pseudo :", value);
+                // Pas d'appel SignalR ici : on laisse le GET
+                // renvoyer vers /SpeedTyping/Lobby/{id}?pseudo=...
+            });
+        });
+    </script>
+}

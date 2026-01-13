@@ -1,0 +1,194 @@
+@{
+    ViewData["Title"] = "SpeedTyping";
+    var lobbyId = ViewBag.LobbyId as string ?? "";
+    var pseudo = ViewBag.Pseudo as string ?? "";
+    var lobbyUrl = ViewBag.LobbyUrl as string ?? "";
+}
+
+
+
+
+    <div id="speedtyping-root"
+         class="main-container"
+         data-lobby-id="@lobbyId"
+         data-pseudo="@pseudo"
+         data-lobby-url="@lobbyUrl">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">⚡ SPEEDTYPING ⚡</div>
+            <p class="subtitle">Maîtrisez votre clavier • Battez les records</p>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Game Section -->
+            <div class="game-zone">
+                <!-- Game Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-header-icon">🎮</span>
+                        Paramètres du Jeu
+                    </div>
+
+                    <div class="difficulty-select">
+                        <button class="diff-btn active" data-diff="easy">Facile</button>
+                        <button class="diff-btn" data-diff="medium">Moyen</button>
+                        <button class="diff-btn" data-diff="hard">Difficile</button>
+                    </div>
+
+                    <div class="game-info">
+                        <div class="info-item">
+                            <div class="info-label">Lobby</div>
+                            <div class="info-value" id="lobbyName">@lobbyId</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Joueurs</div>
+                            <div class="info-value" id="playerCount">1</div>
+                        </div>
+                    </div>
+
+                    <div class="share-link">
+                        <div class="info-label">Lien du lobby</div>
+                        <div class="share-row">
+                            <input type="text"
+                                   id="lobbyUrl"
+                                   value="@lobbyUrl"
+                                   readonly/>
+                            <button type="button" id="btnCopyLink">Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Area -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-header-icon">⏱️</span>
+                        Test de Vitesse
+                    </div>
+
+                    <div class="timer-display" id="timer">60</div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Vitesse</div>
+                            <div class="stat-value" id="wpm">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Précision</div>
+                            <div class="stat-value" id="accuracy">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Score</div>
+                            <div class="stat-value" id="score">0</div>
+                        </div>
+                    </div>
+
+                    <div class="text-display" id="textToType">
+                        <span class="char upcoming">
+                            En attente du lancement de la partie...
+                        </span>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Progression</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <textarea id="userInput" rows="4" placeholder="Commencez à taper ici..." autocomplete="off"></textarea>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="btnStart">🚀 Lancer</button>
+                        <button class="btn btn-secondary" id="btnReset">↻ Réinitialiser</button>
+                        <button class="btn btn-secondary" id="btnLeaderboard">🏆 Classement</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="game-zone">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-header-icon">👥</span>
+                        Joueurs
+                    </div>
+                    <div class="players-panel" id="playersPanel">
+                        <!-- Rempli par JS à partir de LobbyUpdated / ProgressUpdated -->
+                    </div>
+                </div>
+
+                <div class="card" style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="card-header">
+                        <span class="card-header-icon">💬</span>
+                        Chat
+                    </div>
+                    <div class="chat-container" style="flex: 1;">
+                        <div class="messages-box">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="messageInput" placeholder="Message..." autocomplete="off">
+                            <button id="btnSend">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultsModal">
+        <div class="modal-content">
+            <div class="modal-title">🎉 Partie Terminée!</div>
+            <div class="modal-stats">
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Vitesse</div>
+                    <div class="modal-stat-value" id="modalWpm">0</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Précision</div>
+                    <div class="modal-stat-value" id="modalAccuracy">0%</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Score</div>
+                    <div class="modal-stat-value" id="modalScore">0</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Caractères</div>
+                    <div class="modal-stat-value" id="modalChars">0</div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
+                <button class="btn btn-secondary"
+                        onclick="document.getElementById('resultsModal').classList.remove('show')">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/speedtyping.css" />
+    <style>
+        #pseudoForm{
+            margin-top: 25%;
+        }
+    </style>
+}
+
+
+    @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/speedtyping.js"></script>
+    <script>
+       
+    </script>
+
+
+}

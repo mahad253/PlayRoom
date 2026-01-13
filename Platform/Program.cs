@@ -64,12 +64,15 @@ app.MapControllerRoute(
 // =======================
 
 // Chat global
-app.MapHub<ChatHub>("/chatHub");
+//app.MapHub<ChatHub>("/chatHub");
 
 // Puissance 4
 app.MapHub<Connect4Hub>("/connect4Hub");
 
 // Morpion
 app.MapHub<MorpionHub>("/morpionHub");
+
+// SpeedTyping (par lobby)
+app.MapHub<SpeedTypingHub>("/speedTypingHub");
 
 app.Run();

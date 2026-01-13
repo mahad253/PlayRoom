@@ -1,3 +1,5 @@
+using PlayRoom.Models;
+
 namespace GamingPlatform.Models;
 
 public class Lobby
@@ -15,4 +17,7 @@ public class Lobby
 
     // État du jeu associé (pour Morpion uniquement ici)
     public Morpion Game { get; set; } = new Morpion();
+    
+    // SpeedTyping
+    public SpeedTypingGame? SpeedTypingGame { get; set; }
 }
