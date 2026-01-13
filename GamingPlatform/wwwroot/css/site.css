@@ -1,0 +1,313 @@
+/* =========================
+   RESET & GLOBAL
+========================= */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa, #e9eff5);
+    color: #1f2937;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* HERO full width sous navbar */
+.hero-modern {
+    padding-top: 140px; /* compense navbar */
+    padding-bottom: 160px;
+    background: linear-gradient(120deg, #4f46e5, #06b6d4);
+    color: white;
+    text-align: center;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar-modern {
+    background: linear-gradient(120deg, #4f46e5, #06b6d4);
+    padding: 16px 0;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-modern .navbar-brand,
+.navbar-modern .nav-link {
+    color: white !important;
+    font-weight: 600;
+}
+
+.navbar-modern .nav-link:hover {
+    opacity: 0.9;
+}
+
+/* bouton navbar */
+.btn-nav-play {
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-weight: 600;
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn-nav-play:hover {
+    background: white;
+    color: #4f46e5;
+}
+
+/* navbar après scroll */
+.navbar-scrolled {
+    background: rgba(255,255,255,0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.navbar-scrolled .navbar-brand,
+.navbar-scrolled .nav-link {
+    color: #1f2937 !important;
+}
+
+.navbar-scrolled .btn-nav-play {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero-modern {
+    padding: 160px 0;
+    background: linear-gradient(120deg, #4f46e5, #06b6d4);
+    color: white;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin: 20px 0 40px;
+    opacity: 0.95;
+}
+
+.hero-actions {
+    margin-top: 40px;
+}
+
+.hero-actions .btn {
+    margin: 0 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    padding: 10px 26px;
+}
+
+/* boutons hero */
+.hero-modern .btn-primary {
+    background: white;
+    color: #4f46e5;
+    border: none;
+}
+
+.hero-modern .btn-primary:hover {
+    background: #eef2ff;
+}
+
+.hero-modern .btn-outline-primary {
+    color: white;
+    border: 2px solid white;
+    background: transparent;
+}
+
+.hero-modern .btn-outline-primary:hover {
+    background: white;
+    color: #4f46e5;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.section-title {
+    font-weight: 700;
+}
+
+/* =========================
+   GAME CARDS
+========================= */
+.game-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+}
+
+.game-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.game-card-body {
+    padding: 24px;
+    text-align: center;
+}
+
+.game-card h5 {
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+.game-card p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.featured {
+    border: 2px solid #4f46e5;
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-green { background: #22c55e; color: white; }
+.badge-blue { background: #3b82f6; color: white; }
+.badge-orange { background: #f59e0b; color: white; }
+
+/* =========================
+   STEPS
+========================= */
+.step {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: #4f46e5;
+    color: white;
+    font-weight: 700;
+    line-height: 48px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer-modern {
+    padding: 50px 0;
+    background: #0f172a;
+    color: white;
+}
+
+.footer-modern h5 {
+    font-weight: 700;
+}
+
+.footer-icon {
+    color: white;
+    margin: 0 12px;
+    font-size: 1.4rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.footer-icon:hover {
+    opacity: 1;
+}
+
+
+/* =========================
+   MORPION PAGE
+========================= */
+
+.morpion-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* ⬇⬇⬇ LA CORRECTION IMPORTANTE */
+    padding-top: 160px;
+    padding-bottom: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.morpion-card {
+    background: white;
+    padding: 40px 50px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+    max-width: 420px;
+    width: 100%;
+}
+
+
+/* titres */
+.morpion-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.morpion-status {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #4f46e5;
+}
+
+/* grille */
+.morpion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    grid-template-rows: repeat(3, 110px);
+    gap: 14px;
+    justify-content: center;
+}
+
+/* cellules */
+.cell {
+    background: #f8fafc;
+    border-radius: 18px;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.cell:hover {
+    background: #eef2ff;
+    transform: scale(1.05);
+}
+
+/* bouton rejouer */
+#restartBtn {
+    border-radius: 999px;
+    padding: 10px 28px;
+    font-weight: 600;
+}
+

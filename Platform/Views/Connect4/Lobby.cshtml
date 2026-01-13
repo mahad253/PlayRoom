@@ -1,0 +1,131 @@
+@{
+    ViewData["Title"] = "Lobby Puissance 4";
+    string lobbyId = (string)ViewBag.LobbyId;
+    string pseudo = ViewBag.Pseudo as string ?? "";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/connect4.css" asp-append-version="true" />
+}
+
+<section class="container lobby-page">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">🔵 Lobby Puissance 4</h2>
+            <div class="text-muted small">
+                Lobby ID : <span class="fw-semibold" id="lobbyId">@lobbyId</span>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center mt-2 mt-md-0">
+            <button id="copyLinkBtn" class="btn btn-outline-primary rounded-pill px-3">
+                <i class="fas fa-link me-2"></i> Copier le lien
+            </button>
+        </div>
+    </div>
+
+    <div id="copyToast" class="copy-toast" role="status" aria-live="polite">
+        ✅ Lien copié dans le presse-papiers
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="row g-4 mt-2">
+
+        <!-- LEFT -->
+        <div class="col-lg-4">
+
+            <!-- PLAYERS -->
+            <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold mb-3">👥 Joueurs</h5>
+
+                <div id="playersList" class="d-flex flex-column gap-2">
+                    <!-- rempli par JS -->
+                </div>
+
+                <div class="mt-3 d-flex gap-2">
+    <button id="startBtn"
+            class="btn btn-success rounded-pill px-3"
+            disabled>
+        ▶ Démarrer
+    </button>
+
+    <button id="restartBtn"
+            class="btn btn-warning rounded-pill px-3 d-none">
+        🔄 Rejouer
+    </button>
+
+    <button id="leaveBtn"
+            class="btn btn-outline-secondary rounded-pill px-3">
+        Quitter
+    </button>
+</div>
+
+
+                <small class="text-muted d-block mt-2">
+                    Vous êtes : <span class="fw-semibold" id="myPseudo">@pseudo</span>
+                </small>
+            </div>
+
+            <!-- CHAT -->
+            <div class="bg-white rounded-4 shadow-sm p-4 chat-card">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="fw-bold mb-0">💬 Chat</h5>
+                    <small class="text-muted">Lobby</small>
+                </div>
+
+                <div id="chatMessages" class="chat-messages"></div>
+
+                <div class="chat-input mt-3">
+                    <input id="chatInput"
+                           type="text"
+                           class="form-control"
+                           placeholder="Écris un message…"
+                           maxlength="200"
+                           autocomplete="off" />
+
+                    <button id="chatSendBtn"
+                            type="button"
+                            class="btn btn-primary rounded-pill px-3">
+                        Envoyer
+                    </button>
+                </div>
+
+                <small class="text-muted d-block mt-2">
+                    Astuce : appuie sur Entrée pour envoyer
+                </small>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-8">
+
+            <div class="bg-white rounded-4 shadow-sm p-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">🎮 Partie</h5>
+                    <div id="status" class="badge bg-info text-dark px-3 py-2">Connexion…</div>
+                </div>
+
+                <div id="board" class="c4-board" aria-label="Grille puissance 4"></div>
+
+                <div class="text-muted small mt-3">
+                    Règle : aligne 4 jetons horizontalement, verticalement ou en diagonale.
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+
+
+</section>
+
+<script>
+    window.CONNECT4_LOBBY = "@lobbyId";
+    window.CONNECT4_PSEUDO = "@pseudo";
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script src="~/js/connect4-lobby.js" asp-append-version="true"></script>

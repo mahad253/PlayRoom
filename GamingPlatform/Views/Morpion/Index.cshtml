@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Morpion";
+}
+
+<section class="morpion-page">
+
+    <div class="morpion-card">
+
+        <h1 class="morpion-title">🎮 Morpion</h1>
+
+        <p id="status" class="morpion-status">
+            En attente de connexion...
+        </p>
+
+        <div class="morpion-grid">
+            @for (int i = 0; i < 9; i++)
+            {
+                <div class="cell" data-index="@i"></div>
+            }
+        </div>
+
+        <button id="restartBtn" class="btn btn-outline-primary mt-4" style="display:none;">
+            🔄 Rejouer
+        </button>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/morpion.js"></script>
+}
