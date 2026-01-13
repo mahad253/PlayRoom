@@ -1,23 +1,11 @@
-using GamingPlatform.Data;
 using GamingPlatform.Hubs;
 using GamingPlatform.Services;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // =======================
 // SERVICES
 // =======================
-
-// Database
-builder.Services.AddDbContext<GamingPlatformContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("GamingPlatformContext")
-        ?? throw new InvalidOperationException(
-            "Connection string 'GamingPlatformContext' not found."
-        )
-    )
-);
 
 // MVC
 builder.Services.AddControllersWithViews();
@@ -34,8 +22,11 @@ builder.Services.AddSession(options =>
 // SignalR
 builder.Services.AddSignalR();
 
-// Store des jeux (Puissance 4, etc.)
+// ✅ Store des jeux (Puissance 4, etc.)
 builder.Services.AddSingleton<IGameStore, InMemoryGameStore>();
+
+// ✅ Lobby service (utilisé par Morpion sur main)
+builder.Services.AddSingleton<LobbyService>();
 
 var app = builder.Build();
 
@@ -49,14 +40,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Si vous ne gérez pas HTTPS en local, vous pouvez commenter cette ligne
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ session DOIT être ici
+// ✅ Session
 app.UseSession();
 
 app.UseAuthorization();

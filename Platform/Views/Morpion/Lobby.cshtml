@@ -1,0 +1,175 @@
+@{
+    ViewData["Title"] = "Lobby Morpion";
+    string lobbyId = (string)ViewBag.LobbyId;
+    string pseudo = ViewBag.Pseudo as string ?? "";
+}
+
+<section class="container lobby-page">
+
+    <!-- ================= HEADER ================= -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">🧩 Lobby Morpion</h2>
+            <div class="text-muted small">
+                Lobby ID :
+                <span class="fw-semibold">@lobbyId</span>
+            </div>
+        </div>
+
+        <div class="text-end mt-3 mt-md-0">
+            <div class="text-muted small">Connecté en tant que</div>
+            <div class="fw-bold fs-5" id="currentUserName">
+                @pseudo
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= SHARE LINK ================= -->
+    <div class="alert alert-info rounded-4 shadow-sm position-relative mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div>
+                🔗 <strong>Lien à partager</strong>
+                <div class="fw-semibold mt-1" id="shareLink"></div>
+            </div>
+
+            <button id="copyBtn"
+                    type="button"
+                    class="btn btn-outline-primary rounded-pill px-4 mt-3 mt-md-0">
+                📋 Copier
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= TOAST PUSH ================= -->
+    <div id="copyToast"
+         class="copy-toast"
+         role="status"
+         aria-live="polite"
+         aria-atomic="true">
+        ✅ Lien copié dans le presse-papiers
+    </div>
+
+    <!-- ================= MAIN GRID ================= -->
+    <div class="row g-4 mt-2">
+
+        <!-- ========== LEFT COLUMN ========== -->
+        <div class="col-lg-4">
+
+            <!-- ===== PLAYERS PANEL ===== -->
+            <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+                <h5 class="fw-bold mb-3">👥 Joueurs</h5>
+
+                <ul id="playersList"
+                    class="list-group list-group-flush mb-3">
+                    <!-- rempli dynamiquement -->
+                </ul>
+
+                <!-- Host only (géré par JS) -->
+                <button id="startBtn"
+                        type="button"
+                        class="btn btn-primary w-100 rounded-pill mt-2 d-none">
+                    ▶️ Lancer la partie
+                </button>
+
+                <p id="lobbyStatus"
+                   class="text-muted text-center mt-3 mb-0 small">
+                    Connexion…
+                </p>
+            </div>
+
+            <!-- ===== CHAT PANEL ===== -->
+            <div class="bg-white rounded-4 shadow-sm p-4 chat-card">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="fw-bold mb-0">💬 Chat</h5>
+                    <small class="text-muted">Lobby</small>
+                </div>
+
+                <div id="chatMessages"
+                     class="chat-messages">
+                    <!-- messages dynamiques -->
+                </div>
+
+                <div class="chat-input mt-3">
+                    <input id="chatInput"
+                           type="text"
+                           class="form-control"
+                           placeholder="Écris un message…"
+                           maxlength="200"
+                           autocomplete="off" />
+
+                    <button id="chatSendBtn"
+                            type="button"
+                            class="btn btn-primary rounded-pill px-3">
+                        Envoyer
+                    </button>
+                </div>
+
+                <small class="text-muted d-block mt-2">
+                    Astuce : appuie sur Entrée pour envoyer
+                </small>
+            </div>
+
+        </div>
+
+        <!-- ========== GAME COLUMN ========== -->
+        <div class="col-lg-8">
+            <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100">
+
+                <h5 class="fw-bold mb-2">🎮 Partie</h5>
+
+                <p id="status"
+                   class="morpion-status mb-3">
+                    En attente d’un autre joueur…
+                </p>
+
+                <div class="morpion-grid mx-auto">
+                    @for (int i = 0; i < 9; i++)
+                    {
+                        <div class="cell"
+                             data-index="@i"></div>
+                    }
+                </div>
+
+                <!-- Host only (géré par JS) -->
+                <button id="restartBtn"
+                        type="button"
+                        class="btn btn-outline-primary rounded-pill mt-4 px-4 d-none">
+                    🔄 Rejouer
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= HIDDEN DATA ================= -->
+<input type="hidden" id="lobbyId" value="@lobbyId" />
+<input type="hidden" id="pseudo" value="@pseudo" />
+
+<!-- ================= PSEUDO PROMPT ================= -->
+<div id="pseudoPrompt"
+     class="pseudo-overlay"
+     style="display:none;">
+    <div class="pseudo-box">
+        <h5 class="fw-bold">👤 Choisis un pseudo</h5>
+
+        <input id="pseudoInput"
+               type="text"
+               class="form-control mt-3 text-center"
+               placeholder="Choisir un pseudo..."
+               maxlength="20"
+               autocomplete="off" />
+
+        <button id="confirmPseudoBtn"
+                type="button"
+                class="btn btn-primary w-100 mt-3 rounded-pill">
+            Rejoindre le lobby
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/morpion.js"></script>
+}
