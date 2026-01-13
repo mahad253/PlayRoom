@@ -38,18 +38,6 @@ namespace GamingPlatform.Controllers
             );
         }
 
-        // PAGE LOBBY / JEU (LIEN PUBLIC)
-        // [HttpGet("/SpeedTyping/Lobby/{id}")]
-        // public IActionResult Lobby(string id, string? pseudo)
-        // {
-        //     ViewBag.LobbyId = id;
-        //     ViewBag.Pseudo = pseudo ?? "";
-        //
-        //     var baseUrl = $"{Request.Scheme}://{Request.Host}";
-        //     ViewBag.LobbyUrl = $"{baseUrl}/SpeedTyping/Lobby/{id}";
-        //
-        //     return View("Game");
-        // }
         [HttpGet("/SpeedTyping/Lobby/{id}")]
         public IActionResult Lobby(string id, string? pseudo)
         {

@@ -25,13 +25,13 @@ public class Connect4Controller : Controller
             return RedirectToAction("Index");
         }
 
-        // ✅ stocker pseudo en session
+        // stocker pseudo en session
         HttpContext.Session.SetString(SessionPseudoKey, pseudo);
 
-        // ✅ créer nouveau lobby
+        // créer nouveau lobby
         var lobbyId = Guid.NewGuid().ToString("N");
 
-        // ✅ aller au lobby (sans pseudo dans l'URL)
+        // aller au lobby (sans pseudo dans l'URL)
         return RedirectToAction("Lobby", new { id = lobbyId });
     }
 
@@ -54,10 +54,10 @@ public class Connect4Controller : Controller
             return RedirectToAction("Index", new { lobbyId });
         }
 
-        // ✅ stocker pseudo en session
+        // stocker pseudo en session
         HttpContext.Session.SetString(SessionPseudoKey, pseudo);
 
-        // ✅ rejoindre lobby existant
+        // rejoindre lobby existant
         return RedirectToAction("Lobby", new { id = lobbyId });
     }
 
@@ -71,7 +71,7 @@ public class Connect4Controller : Controller
 
         var pseudo = (HttpContext.Session.GetString(SessionPseudoKey) ?? "").Trim();
 
-        // ✅ si pas de pseudo -> demander via Index mais en gardant lobbyId
+        // si pas de pseudo -> demander via Index mais en gardant lobbyId
         if (pseudo.Length < 2)
             return RedirectToAction("Index", new { lobbyId = id });
 

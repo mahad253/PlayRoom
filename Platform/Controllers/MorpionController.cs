@@ -48,11 +48,9 @@ namespace GamingPlatform.Controllers
         [HttpGet("/Morpion/Lobby/{id}")]
         public IActionResult Lobby(string id, string? pseudo)
         {
-            // ⚠️ ICI, PLUS AUCUNE VALIDATION DU PSEUDO
-            // Le pseudo peut être vide → JS s’en occupe
 
             ViewBag.LobbyId = id;
-            ViewBag.Pseudo = pseudo ?? ""; // vide si invité
+            ViewBag.Pseudo = pseudo ?? ""; 
 
             return View();
         }
