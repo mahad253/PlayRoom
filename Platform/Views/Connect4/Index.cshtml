@@ -3,10 +3,18 @@
     var lobbyId = Context.Request.Query["lobbyId"].ToString();
     bool hasLobby = !string.IsNullOrWhiteSpace(lobbyId);
 }
-<div class="container py-5 connect4-index-page" style="max-width:500px;">
+@section Styles {
+    <link rel="stylesheet" href="~/css/connect4.css" asp-append-version="true" />
+}
 
-<div class="container py-5" style="max-width:500px;">
-    <h2 class="mb-3">Puissance 4</h2>
+<div class="connect4-index-page">
+  <div class="connect4-card">
+    <div class="connect4-card-header">
+      <h2 class="connect4-title">Puissance 4</h2>
+      <p class="connect4-subtitle mb-0">
+        @(hasLobby ? "Rejoins une partie existante" : "Crée une nouvelle partie en 1 clic")
+      </p>
+    </div>
 
     @if (TempData["Error"] != null)
     {
@@ -20,20 +28,31 @@
         </div>
     }
 
-    <form method="post" asp-action="@(hasLobby ? "Join" : "Create")">
+    <form method="post" asp-action="@(hasLobby ? "Join" : "Create")" class="mt-4">
         @if (hasLobby)
         {
             <input type="hidden" name="lobbyId" value="@lobbyId" />
         }
 
-        <div class="mb-3">
-            <label class="form-label">Pseudo</label>
-            <input name="pseudo" class="form-control" required minlength="2" maxlength="20" />
+        <div class="mb-3 text-left">
+            <label class="form-label connect4-label">Pseudo</label>
+            <input name="pseudo"
+                   class="form-control connect4-input"
+                   required minlength="2" maxlength="20"
+                   placeholder="Ton pseudo…"
+                   autocomplete="nickname" />
         </div>
 
-        <button class="btn btn-dark w-100">
-            @(hasLobby ? "Rejoindre" : "Créer une partie")
+        <button class="btn btn-dark w-100 connect4-primary-btn">
+            <span class="mr-2">@(hasLobby ? "Rejoindre" : "Créer une partie")</span>
+            <i class="fas fa-arrow-right"></i>
         </button>
     </form>
+
+    <div class="connect4-hint mt-3">
+  <i class="fas fa-gamepad mr-1"></i>
+  Choisis un pseudo. À toi de jouer.
 </div>
+
+  </div>
 </div>

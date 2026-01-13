@@ -52,7 +52,7 @@
   padding: 10px 14px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,.2);
-  opacity: 0;                 /* ✅ caché */
+  opacity: 0;
   transform: translateY(10px);
   pointer-events: none;
   transition: opacity .2s ease, transform .2s ease;
@@ -60,15 +60,90 @@
 }
 
 .copy-toast.show{
-  opacity: 1;                 /* ✅ visible seulement quand show */
+  opacity: 1;
   transform: translateY(0);
 }
-.lobby-page{
-  padding-top: 90px; /* ajuste si besoin: 70-110 */
-}
 
-.connect4-index-page {
+.lobby-page{
   padding-top: 90px;
 }
 
+/* =========================
+   CONNECT4 – INDEX (Landing)
+========================= */
+.connect4-index-page{
+  padding: 140px 16px 60px;
+  min-height: calc(100vh - 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.connect4-card{
+  width: 100%;
+  max-width: 520px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 22px;
+  padding: 30px 28px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+  backdrop-filter: blur(10px);
+}
+
+.connect4-card-header{
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.connect4-title{
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.connect4-subtitle{
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.connect4-label{
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.connect4-input{
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
+}
+
+.connect4-input:focus{
+  border-color: rgba(79, 70, 229, 0.55);
+  box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+}
+
+.connect4-primary-btn{
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-weight: 800;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+.connect4-hint{
+  text-align: center;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.connect4-hint i{
+  color: #4f46e5;
+  margin-right: 6px;
+}
+
+@media (max-width: 576px){
+  .connect4-card{ padding: 26px 18px; }
+  .connect4-title{ font-size: 1.85rem; }
+}
