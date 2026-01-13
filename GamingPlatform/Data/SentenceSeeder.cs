@@ -16,15 +16,15 @@ public static class SentenceSeeder
         {
             new Sentence
             {
-                Text = "Aujourd'hui est une belle journée pour apprendre à taper plus vite au clavier.\nChaque mot correctement tapé te rend plus à l'aise avec ton ordinateur.",
-                Language = "EN",
+                Text = "Bonjour tous le monde.",
+                Language = "FR",
                 Difficulty = 1
             },
             new Sentence
             {
                 Text = "La vitesse de frappe ne se mesure pas seulement en mots par minute, mais aussi en précision.\nUn bon joueur de speedtyping prend le temps de regarder ses erreurs, de les comprendre, puis de s'entraîner à les éviter.\nAvec quelques minutes de pratique chaque jour, les progrès deviennent rapidement visibles.",
                 Language = "FR",
-                Difficulty = 1
+                Difficulty = 2
             },
             new Sentence
             {

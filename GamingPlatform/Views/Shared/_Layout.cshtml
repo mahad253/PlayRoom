@@ -1,96 +1,58 @@
 ﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
     <title>@ViewData["Title"] - PlayRoom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
-    <!-- CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
-
+<body>
 @{
     var controller = ViewContext.RouteData.Values["controller"]?.ToString();
     var action = ViewContext.RouteData.Values["action"]?.ToString();
-
     bool isHomePage = controller == "Home" && action == "Index";
 }
 
-<body>
+<header class="app-header">
+    <div class="header-inner">
+        <a asp-controller="Home" asp-action="Index" class="brand">
+            <span class="brand-logo">PR</span>
+            <span class="brand-text">PlayRoom</span>
+        </a>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-modern fixed-top" id="mainNavbar">
-        <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                <i class="fas fa-gamepad mr-2"></i>PlayRoom
+        <nav class="main-nav">
+            <a asp-controller="Home" asp-action="Index"
+               class="nav-link @(isHomePage ? "nav-link-active" : "")">
+                Accueil
             </a>
+            <a asp-controller="Games" asp-action="Index" class="nav-link">Jeux</a>
+            <a asp-controller="Lobbies" asp-action="Index" class="nav-link">Lobbys</a>
+        </nav>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav ml-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">
-                            Accueil
-                        </a>
-                    </li>
-
-                    @* 👇 BOUTON VISIBLE UNIQUEMENT SUR L’ACCUEIL *@
-                    @if (isHomePage)
-                    {
-                        <li class="nav-item ml-3">
-                            <a href="#games" class="btn btn-nav-play">
-                                Jouer maintenant
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
+        <div class="header-actions">
+            <a asp-controller="Home" asp-action="Login" class="btn-secondary">
+                Se connecter
+            </a>
         </div>
-    </nav>
+    </div>
+</header>
 
-    <!-- CONTENU -->
-    <main class="main-content">
-        @RenderBody()
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="footer-modern">
-        <div class="container text-center">
-            <h5 class="mb-2">PlayRoom</h5>
-            <p class="text-muted mb-3">
-                Plateforme de jeux multijoueurs en temps réel.
-            </p>
+<main class="app-main">
+    @RenderBody()
+</main>
 
-            <div class="mb-3">
-                <a href="#" class="footer-icon"><i class="fab fa-github"></i></a>
-                <a href="#" class="footer-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="footer-icon"><i class="fab fa-discord"></i></a>
-            </div>
+<footer class="app-footer">
+    <div class="footer-inner">
+        <span>&copy; @DateTime.Now.Year - PlayRoom</span>
+        <span>Plateforme de jeux multijoueurs en temps réel</span>
+    </div>
+</footer>
 
-            <small class="text-muted">
-                © @DateTime.Now.Year PlayRoom — Projet M2 GIL
-            </small>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,4 +1,5 @@
 using GamingPlatform.Data;
+using GamingPlatform.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<GamingPlatformContext>(options =>
 );
 
 builder.Services.AddScoped<SpeedTypingService>();
+builder.Services.AddScoped<LobbyService>();
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 
@@ -25,6 +28,9 @@ var app = builder.Build();
 
 // pour JS / CSS
 app.UseStaticFiles();
+
+// endpoint SignalR pour le lobby
+app.MapHub<GamingPlatform.Hubs.LobbyHub>("/lobbyHub");
 
 
 // Seed JSON 

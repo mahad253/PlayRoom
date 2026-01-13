@@ -34,5 +34,14 @@ namespace GamingPlatform.Controllers
             // Affiche la page SpeedTyping avec juste l’UI
             return View("~/Views/SpeedTyping/index.cshtml");
         }
+        
+        public IActionResult Login()
+        {
+            return View("~/Views/Login/index.cshtml");
+        }
+        public IActionResult Lobby()
+        {
+            return View("~/Views/Lobby/index.cshtml");
+        }
     }
 }

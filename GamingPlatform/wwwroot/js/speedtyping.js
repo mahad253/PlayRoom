@@ -10,7 +10,8 @@ let gameState = {
         easy: 60,
         medium: 45,
         hard: 30
-    }
+    },
+    progress: 0,
 };
 
 // DOM Elements
@@ -41,9 +42,21 @@ difficultyButtons.forEach(btn => {
         difficultyButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const diff = btn.dataset.diff; // easy/medium/hard
-        if (diff === "easy") currentDifficulty = 1;
-        if (diff === "medium") currentDifficulty = 2;
-        if (diff === "hard") currentDifficulty = 3;
+        if (diff === "easy") {
+            currentDifficulty = 1;
+            gameState.timeLeft = gameState.difficulties.easy
+           
+        }
+        if (diff === "medium") {
+            currentDifficulty = 2;
+            gameState.timeLeft = gameState.difficulties.medium;
+        }
+        if (diff === "hard") {
+            currentDifficulty = 3;
+            gameState.timeLeft = gameState.difficulties.hard;
+        }
+
+        timerEl.textContent = gameState.timeLeft;
     });
 });
 
@@ -76,7 +89,6 @@ btnStart.addEventListener("click", async () => {
 });
 
 function startGame() {
-    console.log("HELLO")
     gameState.isRunning = true;
     gameState.timeLeft = gameState.difficulties[gameState.currentDifficulty];
     userInputEl.value = '';
@@ -90,7 +102,7 @@ function startGame() {
         gameState.timeLeft--;
         updateTimer();
 
-        if (gameState.timeLeft <= 0) {
+        if (gameState.timeLeft <= 0 || gameState.progress === 100) {
             endGame();
         }
     }, 1000);
@@ -132,6 +144,7 @@ userInputEl.addEventListener('input', (e) => {
 
     // Calculate progress
     const progress = Math.min((typed.length / target.length) * 100, 100);
+    gameState.progress = progress;
     progressBarEl.style.width = progress + '%';
     progressTextEl.textContent = Math.floor(progress) + '%';
 
@@ -157,6 +170,7 @@ userInputEl.addEventListener('input', (e) => {
 function endGame() {
     clearInterval(gameState.timerInterval);
     gameState.isRunning = false;
+    gameState.progress = 0;
     userInputEl.disabled = true;
     btnStart.disabled = false;
 

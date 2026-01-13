@@ -1,0 +1,42 @@
+<div class="card lobby-card">
+    <div class="card-header">
+        Créer un lobby
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <label for="hostName">Pseudo</label>
+            <input type="text" id="hostName" class="form-control" placeholder="Votre pseudo" />
+        </div>
+
+        <div class="form-group">
+            <label for="gameType">Jeu</label>
+            <select id="gameType" class="form-control">
+                <option value="SpeedTyping">SpeedTyping</option>
+                <option value="Morpion">Morpion</option>
+                <option value="Puissance4">Puissance 4</option>
+            </select>
+        </div>
+
+        <div class="form-group form-inline">
+            <label class="checkbox-label">
+                <input type="checkbox" id="isPrivate" />
+                Lobby privé
+            </label>
+        </div>
+
+        <div class="form-group" id="passwordGroup" style="display: none;">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" class="form-control" placeholder="Mot de passe du lobby" />
+        </div>
+
+        <button id="btnCreateLobby" class="btn btn-primary lobby-btn">
+            Créer le lobby
+        </button>
+
+        <div id="createLobbyError" class="error-text"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/lobby-create.js"></script>
+}

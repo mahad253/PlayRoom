@@ -1,21 +1,13 @@
 @{
     ViewData["Title"] = "SpeedTyping";
 }
-@* @model List<GamingPlatform.Models.Sentence> *@
+
 
 <div class="main-container">
     <!-- Header -->
     <div class="header">
         <div class="logo">⚡ SPEEDTYPING ⚡</div>
         <p class="subtitle">Maîtrisez votre clavier • Battez les records</p>
-        @* <ul> *@
-        @*     @foreach (var s in Model) *@
-        @*     { *@
-        @*         <li> *@
-        @*             @s.Id - @s.Text (@s.Language, difficulté @s.Difficulty) *@
-        @*         </li> *@
-        @*     } *@
-        @* </ul> *@
     </div>
 
     <!-- Main Grid -->
@@ -204,4 +196,6 @@
 
 @section Scripts {
     <script src="~/js/speedtyping.js"></script>
+    @* <script src="~/signalr/dist/browser/signalr.min.js"></script> *@
+    @* <script src="~/js/lobby.js"></script> *@
 }
