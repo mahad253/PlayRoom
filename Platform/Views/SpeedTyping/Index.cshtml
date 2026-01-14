@@ -2,46 +2,104 @@
     ViewData["Title"] = "SpeedTyping - Accueil";
 }
 
-<div class="container py-5" style="margin-top: 2%">
-    <h1 class="mb-4">SpeedTyping</h1>
-    <p class="mb-4">
-        Défiez vos amis dans une course de frappe rapide synchronisée en temps réel.
-    </p>
-
-    @if (TempData["Error"] is string err && !string.IsNullOrWhiteSpace(err))
-    {
-        <div class="alert alert-danger">@err</div>
+<style>
+    .st-container {
+        margin-top: 4rem;
+        margin-bottom: 30%;
     }
 
-    <form asp-controller="SpeedTyping"
-          asp-action="Create"
-          method="post"
-          class="row g-3">
+    .st-title {
+        letter-spacing: 0.04em;
+    }
 
-        <div class="col-md-6">
-            <label for="pseudo" class="form-label">Pseudo</label>
-            <input type="text"
-                   class="form-control"
-                   id="pseudo"
-                   name="pseudo"
-                   required />
-        </div>
+    .st-subtitle {
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-        <div class="col-md-3" hidden="hidden">
-            <label for="maxPlayers" class="form-label">Nombre de joueurs max</label>
-            <input type="number" 
-                   class="form-control"
-                   id="maxPlayers"
-                   name="maxPlayers"
-                   min="2"
-                   max="8"
-                   value="4" />
-        </div>
+    .st-card {
+        border-radius: 0.75rem;
+    }
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">
-                Créer un lobby
-            </button>
+    .st-card h2 {
+        font-weight: 600;
+    }
+
+    .st-card-shadow {
+        box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.12);
+    }
+
+    .st-label {
+        font-weight: 500;
+    }
+</style>
+
+<div class="container py-5 st-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <div class="mb-4 text-center">
+                <h1 class="h2 mb-2 st-title">SpeedTyping</h1>
+                <p class="text-muted mb-0 st-subtitle">
+                    Créez un lobby, partagez le lien à vos amis et affrontez‑vous en temps réel sur une course de frappe.
+                </p>
+            </div>
+
+            @if (TempData["Error"] is string err && !string.IsNullOrWhiteSpace(err))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @err
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+            }
+
+            <div class="card st-card st-card-shadow">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Créer un lobby</h2>
+                    <p class="text-muted mb-4">
+                        Choisissez un pseudo, nous nous occupons du reste.
+                    </p>
+
+                    <form asp-controller="SpeedTyping"
+                          asp-action="Create"
+                          method="post"
+                          class="row g-3">
+
+                        <div class="col-12">
+                            <label for="pseudo" class="form-label st-label">Pseudo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="pseudo"
+                                   name="pseudo"
+                                   placeholder="Ex. PlayerOne"
+                                   maxlength="20"
+                                   required />
+                            <div class="form-text">
+                                Visible par les autres joueurs dans le lobby.
+                            </div>
+                        </div>
+
+                        <div class="col-12" hidden>
+                            <label for="maxPlayers" class="form-label">Nombre de joueurs max</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="maxPlayers"
+                                   name="maxPlayers"
+                                   min="2"
+                                   max="8"
+                                   value="4" />
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                Créer le lobby
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
-    </form>
+    </div>
 </div>
